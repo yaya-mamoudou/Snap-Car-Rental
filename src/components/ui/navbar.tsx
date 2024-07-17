@@ -25,7 +25,7 @@ export default function App() {
   ];
 
   return (
-    <Navbar className="*:container" disableAnimation isBordered>
+    <Navbar className="*:container" disableAnimation>
       <NavbarContent className="lg:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
@@ -36,7 +36,10 @@ export default function App() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden gap-4 lg:flex" justify="center">
+      <NavbarContent
+        className="mr-16 hidden gap-4 lg:flex lg:flex-1"
+        justify="center"
+      >
         <NavbarBrand>
           <SnapCarLogoIcon id="wpo" className="h-8" />
         </NavbarBrand>
@@ -45,8 +48,10 @@ export default function App() {
             Home
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#">Rent a Car</Link>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Rent a Car
+          </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
@@ -70,7 +75,7 @@ export default function App() {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent justify="end">
+      <NavbarContent className="lg:!grow-0" justify="end">
         <NavbarItem className="hidden lg:flex">
           <Link href="#">Register</Link>
         </NavbarItem>
