@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <div className="bg-black py-20 text-small font-light">
       <div className="container text-white">
-        <div className="grid grid-cols-12 content-center items-center space-x-6 space-y-6">
+        <div className="grid grid-cols-12 content-center items-center space-y-6 lg:space-x-6">
           <div className="col-span-12 sm:col-span-6 lg:col-span-4">
             <div>
               <div className="mb-8 w-fit bg-white p-2">
