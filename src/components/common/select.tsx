@@ -1,5 +1,5 @@
-import { Select as Sel, SelectItem, SelectProps } from "@nextui-org/react";
-import { ChangeEvent, FocusEvent } from "react";
+import { Select as Sel, SelectItem } from "@nextui-org/react";
+import type { SelectProps } from "@nextui-org/react";
 
 type Props = Omit<SelectProps, "children"> & {
   data: { label: string; value: string | number }[];
@@ -10,8 +10,6 @@ export default function Select(props: Props) {
     data,
     className,
     classNames,
-    onBlur = (prop: FocusEvent<Element, Element>) => {},
-    onChange = (prop: ChangeEvent<HTMLSelectElement>) => {},
     labelPlacement = "outside",
     errorMessage,
     ...rest
@@ -43,10 +41,6 @@ export default function Select(props: Props) {
           helperWrapper: ["px-0", classNames?.helperWrapper],
         }}
         errorMessage={errorMessage}
-        onChange={(e) => {
-          onBlur(e as unknown as FocusEvent<Element, Element>);
-          onChange(e);
-        }}
         {...rest}
       >
         {data.map((item) => (

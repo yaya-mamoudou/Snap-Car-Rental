@@ -1,7 +1,6 @@
-import Button from "~/components/common/button";
 import InsuranceActionBanner from "~/components/common/insurance-action-banner";
-import SnapCarLogoIcon from "~/components/icons/snap-car-logo";
 import Hero from "~/components/pages/home/hero";
+import HowItWorks from "~/components/pages/home/how-it-works";
 import { HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
@@ -9,6 +8,7 @@ export default async function Home() {
     <HydrateClient>
       <Hero />
       <InsuranceActionBanner />
+      <HowItWorks />
     </HydrateClient>
   );
 }

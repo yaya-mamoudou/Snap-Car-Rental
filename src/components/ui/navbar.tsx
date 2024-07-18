@@ -1,18 +1,15 @@
-import React from "react";
 import {
+  Link,
   Navbar,
   NavbarBrand,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
   NavbarContent,
   NavbarItem,
-  Link,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
 } from "@nextui-org/react";
-import SnapCarLogoIcon from "../icons/snap-car-logo";
-import Image from "next/image";
 import Button from "../common/button";
-// import { AcmeLogo } from "./AcmeLogo.jsx";
+import SnapCarLogoIcon from "../icons/snap-car-logo";
 
 export default function App() {
   const menuItems = [

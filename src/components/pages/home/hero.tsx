@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import React from "react";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";

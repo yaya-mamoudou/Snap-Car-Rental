@@ -1,7 +1,6 @@
-import React from "react";
-import { IconProps } from "./interface";
-import Image, { ImageProps } from "next/image";
 import { cn } from "@nextui-org/react";
+import Image from "next/image";
+import type { ImageProps } from "next/image";
 
 type Props = Omit<ImageProps, "src" | "alt">;
 

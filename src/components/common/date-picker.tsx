@@ -1,6 +1,5 @@
-import React from "react";
-import { DatePickerProps, DatePicker as DP } from "@nextui-org/react";
-import { now, getLocalTimeZone, today } from "@internationalized/date";
+import { getLocalTimeZone, now, today } from "@internationalized/date";
+import { type DatePickerProps, DatePicker as DP } from "@nextui-org/react";
 
 type Props = DatePickerProps & {
   withTime?: boolean;
