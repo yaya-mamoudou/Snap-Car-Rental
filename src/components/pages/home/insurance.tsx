@@ -20,40 +20,32 @@ export default function Insurance() {
                   Our Insurance covers you, your pets and luggage
                 </h2>
                 <p>
-                  Got a fantastic deal on a fuel-efficient car, which was
-                  perfect for our get away road trip with my friends. The car
-                  was clean and comfortable, and the price was unbeatable. We
-                  had a blast exploring new places, and we'll definitely
-                  recommend your company to anyone looking for an affordable
-                  rental car." - Emily C., Student
+                  {
+                    "Got a fantastic deal on a fuel-efficient car, which was perfect for our get away road trip with my friends. The car was clean and comfortable, and the price was unbeatable. We had a blast exploring new places, and we'll definitely recommend your company to anyone looking for an affordable rental car. - Emily C., Student"
+                  }
                 </p>
               </div>
               <div className="col-span-12 *:mb-4 md:col-span-4">
                 <p>
-                  Included with Every Rental: Liability Coverage (LI): This
-                  protects you financially if you injure someone or damage
-                  another vehicle or property while driving the rental car. It
-                  meets minimum legal requirements but may not cover all
-                  damages. Optional Coverage (Add-Ons):
+                  {
+                    "Included with Every Rental: Liability Coverage (LI): This protects you financially if you injure someone or damage another vehicle or property while driving the rental car. It meets minimum legal requirements but may not cover all damages. Optional Coverage (Add-Ons):"
+                  }
                 </p>
                 <p>
-                  Collision Damage Waiver (CDW): This covers damage to the
-                  rental car itself in the event of a collision. It reduces your
-                  financial responsibility in case of an accident, typically
-                  coming with a deductible (out-of-pocket expense) you'll need
-                  to pay.
+                  {
+                    "Collision Damage Waiver (CDW): This covers damage to the rental car itself in the event of a collision. It reduces your financial responsibility in case of an accident, typically coming with a deductible (out-of-pocket expense) you'll need to pay."
+                  }
                 </p>
 
                 <p>
-                  Loss Damage Waiver (LDW): Similar to CDW, but also covers
-                  theft of the rental car. Additional Coverage Options
-                  (Available for Purchase):
+                  {
+                    "Loss Damage Waiver (LDW): Similar to CDW, but also covers theft of the rental car. Additional Coverage Options (Available for Purchase):"
+                  }
                 </p>
                 <p>
-                  Personal Accident Insurance (PAI): This provides medical and
-                  accidental death benefits for the driver and passengers in the
-                  rental car. Roadside Assistance (RSA): Provides 24/7
-                  assistance for unexpected situations like flat tires,
+                  {
+                    "Personal Accident Insurance (PAI): This provides medical and accidental death benefits for the driver and passengers in the rental car. Roadside Assistance (RSA): Provides 24/7 assistance for unexpected situations like flat tires,"
+                  }
                 </p>
                 {/* lockouts, or dead batteries. Why Choose Snap Car Rental
                 Insurance? Transparency: We explain our insurance options

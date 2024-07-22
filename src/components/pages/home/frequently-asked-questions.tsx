@@ -1,6 +1,5 @@
 "use client";
 import { Accordion, AccordionItem } from "@nextui-org/react";
-import React from "react";
 
 const data = [
   {
@@ -46,8 +45,6 @@ const data = [
 ];
 
 export default function FrequentlyAskedQuestions() {
-  const defaultContent =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   return (
     <div className="container py-20">
       <h2 className="text-center text-2xl font-semibold">

@@ -19,7 +19,7 @@ export default function WhyChooseUs() {
             Rent Like a Rockstar. Tired of the same old rental car experience?
             Drab sedans, endless paperwork, and hidden fees make rentals feel
             like so much work. At snap car we only aim to give you what you
-            really want fast and easy. Here's how:{" "}
+            really want fast and easy. Here&apos;s how:{" "}
           </p>
         </div>
         <div className="mt-[100px] grid grid-cols-12 gap-x-0 gap-y-20 md:gap-x-10">

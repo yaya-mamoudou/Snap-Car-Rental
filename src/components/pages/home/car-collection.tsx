@@ -42,7 +42,7 @@ export default function CarCollection() {
   );
 }
 
-const Card = ({ ...props }) => {
+const Card = (props: (typeof data)[0]) => {
   return (
     <div className="">
       <div className="mb-4 flex flex-col items-center xl:items-end">
