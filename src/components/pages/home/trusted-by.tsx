@@ -15,7 +15,7 @@ export default function TrustedBy() {
         src="/images/car_texture_black.webp"
         width={500}
         height={300}
-        className="absolute -bottom-20 -right-20 w-2/4 opacity-50"
+        className="absolute -bottom-20 -right-0 w-2/4 opacity-50"
       />
       <div className="container mt-20">
         <h2 className="text-center text-2xl font-semibold">

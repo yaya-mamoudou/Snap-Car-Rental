@@ -10,7 +10,7 @@ export default function Insurance() {
           src="/images/car_texture_black.webp"
           width={500}
           height={300}
-          className="absolute -right-20 bottom-10 w-2/3 opacity-50"
+          className="absolute -right-0 bottom-10 w-2/3 opacity-50"
         />
         <div style={{ minHeight: "inherit" }} className="bg-primary/90">
           <div className="container py-20">
