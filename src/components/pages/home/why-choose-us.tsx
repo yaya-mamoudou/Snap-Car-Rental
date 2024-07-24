@@ -33,7 +33,7 @@ export default function WhyChooseUs() {
           ))}
         </div>
       </div>
-      <div className="pointer-events-none -mt-32 h-[350px] bg-primary">
+      <div className="pointer-events-none -mt-32 h-[250px] bg-primary">
         <div className="relative flex h-full justify-center text-white">
           <Image
             alt="car 6"

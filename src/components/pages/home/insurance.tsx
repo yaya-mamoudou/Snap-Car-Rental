@@ -12,7 +12,7 @@ export default function Insurance() {
           height={300}
           className="absolute -right-0 bottom-10 w-2/3 opacity-50"
         />
-        <div style={{ minHeight: "inherit" }} className="bg-primary/90">
+        <div className="min-h-[inherit] bg-primary/90">
           <div className="container py-20">
             <div className="grid grid-cols-12 gap-x-0 gap-y-4 text-white md:gap-x-20">
               <div className="col-span-12 md:col-span-4">

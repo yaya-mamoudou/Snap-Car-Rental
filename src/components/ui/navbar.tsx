@@ -41,12 +41,12 @@ export default function App() {
           <SnapCarLogoIcon id="wpo" className="h-8" />
         </NavbarBrand>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/">
             Home
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/cars">
             Rent a Car
           </Link>
         </NavbarItem>
