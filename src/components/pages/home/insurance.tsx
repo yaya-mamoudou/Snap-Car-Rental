@@ -47,24 +47,6 @@ export default function Insurance() {
                     "Personal Accident Insurance (PAI): This provides medical and accidental death benefits for the driver and passengers in the rental car. Roadside Assistance (RSA): Provides 24/7 assistance for unexpected situations like flat tires,"
                   }
                 </p>
-                {/* lockouts, or dead batteries. Why Choose Snap Car Rental
-                Insurance? Transparency: We explain our insurance options
-                clearly and simply, so you know exactly what's covered.
-                Flexibility: Choose the level of coverage that best suits your
-                budget and risk tolerance. Peace of Mind: Drive with confidence
-                knowing you're protected in case of an unexpected event. Get a
-                Quick Quote: See how affordable protecting your rental can be!
-                During the booking process, you can easily view the cost of each
-                optional insurance and choose the coverage that best suits your
-                needs. Still Have Questions? Our friendly customer service team
-                is happy to answer any questions you have about our insurance
-                options. Contact us today! Additional Tips: Consider your
-                personal auto insurance policy. Does it offer rental car
-                coverage? Check your credit card benefits. Some cards offer
-                rental car insurance as a perk. Be aware of location-specific
-                requirements. Some countries or states may have mandatory
-                insurance coverage. By choosing Snap Car Rental insurance, you
-                can relax and enjoy the ride, knowing you're covered! */}
               </div>
             </div>
           </div>

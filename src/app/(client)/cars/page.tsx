@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <div className="flex min-h-[inherit] flex-col">
       <div className="border-y-1 border-solid border-black/20">
-        <Steps active={3} />
+        <Steps active={1} />
       </div>
 
       <div className="flex-1 bg-black/5 py-20">
