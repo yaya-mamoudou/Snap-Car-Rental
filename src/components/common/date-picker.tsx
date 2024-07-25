@@ -1,3 +1,4 @@
+"use client";
 import { getLocalTimeZone, now, today } from "@internationalized/date";
 import { type DatePickerProps, DatePicker as DP } from "@nextui-org/react";
 

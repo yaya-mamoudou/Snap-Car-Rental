@@ -55,7 +55,9 @@ const CarCard = (props: typeof carsList) => {
           </div>
         </div>
       </div>
-      <Button className="mt-6 w-full">Rent Now</Button>
+      <Button link href={`/cars/${props?.id}/preview`} className="mt-6 w-full">
+        Rent Now
+      </Button>
     </div>
   );
 };

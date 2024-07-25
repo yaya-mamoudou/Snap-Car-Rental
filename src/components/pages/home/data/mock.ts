@@ -1,4 +1,4 @@
-export const cars = (length = 3) => Array.from({ length }, () => ({
+export const cars = (length = 3) => Array.from({ length }, (_, index) => ({
     images: [
         "/images/cars/car3.jpg",
         "/images/cars/car1.webp",
@@ -10,4 +10,5 @@ export const cars = (length = 3) => Array.from({ length }, () => ({
     gear: "Auto",
     bags: "4",
     engine: "Disel",
+    id: index
 }));

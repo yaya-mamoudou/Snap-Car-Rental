@@ -1,13 +1,13 @@
-import { cn, Pagination } from "@nextui-org/react";
+import { Pagination } from "@nextui-org/react";
 import CarCard from "~/components/common/car-card";
 import { cars } from "~/components/pages/home/data/mock";
+import ReservationSteps from "~/components/ui/reservation-steps";
 const carsList = cars(9);
+
 export default function Page() {
   return (
     <div className="flex min-h-[inherit] flex-col">
-      <div className="border-y-1 border-solid border-black/20">
-        <Steps active={1} />
-      </div>
+      <ReservationSteps />
 
       <div className="flex-1 bg-black/5 py-20">
         <div className="container flex flex-col items-center">
@@ -37,26 +37,3 @@ export default function Page() {
     </div>
   );
 }
-
-const stepData = [
-  "Vehicul Selection",
-  "Review Booking",
-  "Confirm Booking",
-  "Payment",
-];
-
-const Steps = ({ active = 1 }: { active: number }) => {
-  return (
-    <div className="container grid w-full grid-cols-12 flex-wrap justify-center gap-4 py-10 xl:w-2/3">
-      {stepData.map((label, index) => (
-        <div
-          key={index}
-          className={cn(
-            "col-span-12 flex items-center justify-center rounded-2xl border-1 border-black/40 px-4 py-1 text-center sm:col-span-6 lg:col-span-3",
-            active >= index + 1 && "border-tranparent bg-primary text-white",
-          )}
-        >{`${index + 1} ${label}`}</div>
-      ))}
-    </div>
-  );
-};
