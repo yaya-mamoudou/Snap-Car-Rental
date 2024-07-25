@@ -1,6 +1,7 @@
 import { FileText, HardDriveDownload } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import Button from "~/components/common/button";
 
 export default function Page() {
   return (
@@ -12,7 +13,7 @@ export default function Page() {
         height={300}
         className="absolute -right-0 bottom-10 w-2/3 opacity-50"
       />
-      <div className="min-h-[inherit] bg-black/10">
+      <div className="relative z-10 min-h-[inherit] bg-black/10">
         <div className="container flex min-h-[inherit] flex-col items-center justify-center py-20">
           <div className="col-span-12 w-full text-center md:col-span-4 md:w-2/3">
             <h2 className="mb-10 text-2xl font-semibold text-primary">
@@ -34,9 +35,9 @@ export default function Page() {
                 PDF.200kb
               </div>
             </div>
-            <div className="rounded-lg bg-black p-2 text-white">
+            <Button isIconOnly className="rounded-lg bg-black p-2 text-white">
               <HardDriveDownload strokeWidth={1} size={16} />
-            </div>
+            </Button>
           </div>
         </div>
       </div>
