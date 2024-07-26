@@ -26,7 +26,7 @@ export default function Page(props: Props) {
         </div>
 
         <div className="relative">
-          <div className="absolute h-[300px] w-[400px] rounded-r-full bg-primary 2xl:w-2/5"></div>
+          <div className="absolute h-[300px] w-[200px] rounded-r-full bg-primary md:w-[400px] 2xl:w-2/5"></div>
           <div className="container relative z-10">
             <div className="grid grid-cols-12 gap-x-0 gap-y-10 md:gap-x-10">
               <div className="col-span-12 xl:col-span-8">
