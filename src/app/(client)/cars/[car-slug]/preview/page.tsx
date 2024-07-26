@@ -8,9 +8,13 @@ import { cars } from "~/components/pages/home/data/mock";
 import ReservationSteps from "~/components/ui/reservation-steps";
 
 const car = cars(1)[0];
-
-export default function Page({ ...props }) {
-  const slug = props.params?.["car-slug"];
+type Props = {
+  params: {
+    "car-slug": string;
+  };
+};
+export default function Page(props: Props) {
+  const carSlug = props.params?.["car-slug"];
 
   return (
     <div className="flex min-h-[inherit] flex-col">
@@ -28,7 +32,6 @@ export default function Page({ ...props }) {
               <div className="col-span-12 xl:col-span-8">
                 <div className="my-4 h-full min-h-[300px] rounded-2xl bg-white p-10">
                   <Carousel
-                    // slide={false}
                     theme={{
                       control: {
                         base: "border-1 border-black !text-black flex items-center justify-center rounded-full !size-[30px]",
@@ -47,7 +50,7 @@ export default function Page({ ...props }) {
                     {car?.images.map((img, key) => (
                       <Image
                         key={key}
-                        alt={props?.name}
+                        alt="..."
                         src={img}
                         width={200}
                         height={200}
@@ -93,11 +96,13 @@ export default function Page({ ...props }) {
                   <div className="mt-10">
                     <div className="text-xl font-bold uppercase">Insurance</div>
                     <span className="text-sm font-medium text-primary-01">
-                      Mains D'anges Insurance
+                      Mains D&apos;anges Insurance
                     </span>
                   </div>
 
-                  <Button>Book</Button>
+                  <Button link href={`/cars/${carSlug}/confirm`}>
+                    Book
+                  </Button>
                 </form>
               </div>
               <div className="col-span-12 md:col-span-6 xl:col-span-8">
