@@ -30,7 +30,7 @@ export default function Page(props: Props) {
           <div className="container relative z-10">
             <div className="grid grid-cols-12 gap-x-0 gap-y-10 md:gap-x-10">
               <div className="col-span-12 xl:col-span-8">
-                <div className="my-4 h-full min-h-[300px] rounded-2xl bg-white p-10">
+                <div className="my-4 h-full min-h-[300px] rounded-2xl bg-white p-4 md:p-10">
                   <Carousel
                     theme={{
                       control: {
@@ -61,7 +61,7 @@ export default function Page(props: Props) {
                 </div>
               </div>
               <div className="col-span-12 md:col-span-6 xl:col-span-4">
-                <form className="my-4 flex h-full flex-col gap-y-4 rounded-2xl bg-white p-10">
+                <form className="my-4 flex h-full flex-col gap-y-4 rounded-2xl bg-white p-4 md:p-10">
                   <DatePicker
                     withTime
                     label="Pick-Up Date and Time"
@@ -106,7 +106,7 @@ export default function Page(props: Props) {
                 </form>
               </div>
               <div className="col-span-12 md:col-span-6 xl:col-span-8">
-                <div className="my-4 h-full rounded-2xl bg-white p-10">
+                <div className="my-4 h-full rounded-2xl bg-white p-4 md:p-10">
                   <h2 className="mb-5 text-xl font-semibold">Description</h2>
                   Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                   Officiis id non voluptatibus iusto labore, doloribus ad velit
