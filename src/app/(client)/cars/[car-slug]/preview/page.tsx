@@ -54,7 +54,7 @@ export default function Page(props: Props) {
                         src={img}
                         width={200}
                         height={200}
-                        className="size-2/3 object-contain"
+                        className="size-full object-contain md:size-2/3"
                       />
                     ))}
                   </Carousel>
