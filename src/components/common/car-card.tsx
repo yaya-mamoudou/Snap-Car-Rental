@@ -15,7 +15,7 @@ const CarCard = (props: Props) => {
   return (
     <div
       className={cn(
-        "flex flex-col rounded-xl bg-white p-2",
+        "flex h-full flex-col rounded-xl bg-white p-2",
         props.horizontal && "md:flex-row md:gap-x-4",
       )}
     >

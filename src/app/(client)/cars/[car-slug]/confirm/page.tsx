@@ -5,6 +5,7 @@ import { cars } from "~/components/pages/home/data/mock";
 import ReservationSteps from "~/components/ui/reservation-steps";
 const car = cars(1)[0];
 
+type Props = {};
 export default function Page() {
   return (
     <div className="flex min-h-[inherit] flex-col">
