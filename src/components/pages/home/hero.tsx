@@ -1,13 +1,19 @@
 "use client";
+import Image from "next/image";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";
 
 export default function Hero() {
   return (
-    <div className="container">
-      <div className="relative mt-10 flex min-h-[70vh] flex-col items-center justify-end rounded-3xl bg-gradient-to-t from-[#8A8A8A80] to-[#F0F0F080] p-2 !pt-10 sm:p-10 xl:pb-32">
-        <div className="flex w-full flex-col items-center justify-center space-y-6 text-center sm:w-2/3 lg:w-3/6">
+    <div className="md:container">
+      <div className="relative mt-10 flex min-h-[60vh] flex-col items-center justify-end  md:rounded-3xl bg-gradient-to-t from-[#8A8A8A80] to-[#F0F0F080] p-6 !pt-10 sm:p-10 xl:pb-32">
+
+        <div className="xl:absolute mb-10 left-0 top-20 flex justify-center xl:justify-self-start">
+          <Image width={200} height={300} className="z-20 relative w-2/3 sm:w-[300px] lg:w-[400px] " src="/images/hero-car.webp" alt="hero car" />
+          <div className="absolute h-[200px] hidden xl:block  z-10 left-0 top-0 rounded-r-full bg-primary xl:w-4/5"></div>
+        </div>
+        <div className="flex w-full flex-col items-center justify-center space-y-6 text-center sm:w-2/3 xl:w-2/6">
           <h1 className="text-4xl font-medium">
             Rent a Great <br /> Car in a Snap
           </h1>
