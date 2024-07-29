@@ -29,7 +29,7 @@ export default function Page(props: Props) {
           <div className="absolute h-[300px] w-[200px] rounded-r-full bg-primary md:w-[400px] 2xl:w-2/5"></div>
           <div className="container relative z-10">
             <div className="grid grid-cols-12 gap-x-0 gap-y-10 md:gap-x-10">
-              <div className="col-span-12 xl:col-span-8">
+              <div className="col-span-12 xl:col-span-4">
                 <div className="my-4 h-full min-h-[300px] rounded-2xl bg-white p-4 md:p-10">
                   <Carousel
                     theme={{
@@ -58,6 +58,18 @@ export default function Page(props: Props) {
                       />
                     ))}
                   </Carousel>
+                </div>
+              </div>
+              <div className="col-span-12 md:col-span-6 xl:col-span-4">
+                <div className="my-4 h-full rounded-2xl bg-white p-4 md:p-10">
+                  <h2 className="mb-5 text-xl font-semibold">Description</h2>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Officiis id non voluptatibus iusto labore, doloribus ad velit
+                  blanditiis sapiente eveniet eos ipsa magnam laborum fugit
+                  molestiae rerum adipisci quis pariatur aut! Placeat
+                  perspiciatis sed aut expedita aliquam, accusantium saepe et
+                  porro magni quisquam dolorem maiores cumque eius iure cum
+                  inventore!
                 </div>
               </div>
               <div className="col-span-12 md:col-span-6 xl:col-span-4">
@@ -105,18 +117,7 @@ export default function Page(props: Props) {
                   </Button>
                 </form>
               </div>
-              <div className="col-span-12 md:col-span-6 xl:col-span-8">
-                <div className="my-4 h-full rounded-2xl bg-white p-4 md:p-10">
-                  <h2 className="mb-5 text-xl font-semibold">Description</h2>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Officiis id non voluptatibus iusto labore, doloribus ad velit
-                  blanditiis sapiente eveniet eos ipsa magnam laborum fugit
-                  molestiae rerum adipisci quis pariatur aut! Placeat
-                  perspiciatis sed aut expedita aliquam, accusantium saepe et
-                  porro magni quisquam dolorem maiores cumque eius iure cum
-                  inventore!
-                </div>
-              </div>
+
             </div>
           </div>
         </div>

@@ -20,11 +20,11 @@ export default async function Home() {
       <OurFleet />
       <WhyChooseUs />
       <TrustedBy />
-      <Promotions />
-      <Insurance />
+      {/* <Promotions /> */}
+      {/* <Insurance /> */}
       <FrequentlyAskedQuestions />
       <Deals />
-      <CarCollection />
+      {/* <CarCollection /> */}
     </HydrateClient>
   );
 }

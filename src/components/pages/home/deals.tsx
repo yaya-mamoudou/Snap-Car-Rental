@@ -19,13 +19,13 @@ export default function Deals() {
           <strong>Rent an SUV</strong> for less than <strong>$60/day</strong>
         </p>
       </div>
-      <Image
+      {/* <Image
         alt="car images"
         width={500}
         height={300}
         className="w-full"
         src="/images/SUV deals 2.webp"
-      />
+      /> */}
     </div>
   );
 }
