@@ -1,13 +1,10 @@
 "use client";
-import React from "react";
 import {
   DirectionsRenderer,
   GoogleMap,
-  LoadScript,
-  Marker,
-  Polyline,
-  useJsApiLoader,
+  useJsApiLoader
 } from "@react-google-maps/api";
+import React, { useEffect } from "react";
 
 type Coordinates = {
   lat: number;
@@ -33,8 +30,15 @@ const Map = ({ pickup, dropOff }: Props) => {
     googleMapsApiKey: "AIzaSyCFKaSexrDwhs71JfmiUX2gogSI8_FQ3mc",
   });
 
-  React.useEffect(() => {
+  const center = {
+    lat: (pickup.lat + dropOff.lat) / 2,
+    lng: (pickup.lng + dropOff.lng) / 2,
+  };
+
+  useEffect(() => {
     if (isLoaded) {
+      /* eslint-disable  @typescript-eslint/no-floating-promises */
+      /* eslint-disable  @typescript-eslint/restrict-template-expressions */
       const directionsService = new window.google.maps.DirectionsService();
       directionsService.route(
         {
@@ -43,33 +47,28 @@ const Map = ({ pickup, dropOff }: Props) => {
           travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
-          if (status === window.google.maps.DirectionsStatus.OK) {
-            setDirectionsResponse(result);
+          if (status === window.google.maps.DirectionsStatus.OK && result) {
+            // setDirectionsResponse(result);
           } else {
             console.error(`error fetching directions ${result}`);
           }
         },
-      );
+      )
     }
-  }, [isLoaded]);
+  }, [isLoaded, dropOff, pickup]);
 
   const [map, setMap] = React.useState(null);
-
   const onLoad = React.useCallback(function callback(map: any) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
+    /* eslint-disable  @typescript-eslint/no-unsafe-argument */
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
     setMap(map);
-  }, []);
+  }, [center]);
 
-  const onUnmount = React.useCallback(function callback(map: any) {
+  const onUnmount = React.useCallback(function callback() {
     setMap(null);
   }, []);
-
-  const center = {
-    lat: (pickup.lat + dropOff.lat) / 2,
-    lng: (pickup.lng + dropOff.lng) / 2,
-  };
 
   return isLoaded ? (
     <GoogleMap

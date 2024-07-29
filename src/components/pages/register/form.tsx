@@ -1,7 +1,7 @@
 'use client'
 import { Radio, RadioGroup } from '@nextui-org/react';
 import Link from 'next/link';
-import { FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import Button from '~/components/common/button';
 import Input from '~/components/common/input';
 import Upload from '~/components/common/upload';

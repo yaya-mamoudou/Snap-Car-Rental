@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link';
-import { FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import Button from '~/components/common/button';
 import Input from '~/components/common/input';
 
@@ -49,7 +49,7 @@ export default function LoginForm() {
 
             <Button className="mt-6 font-semibold" type="submit">Login</Button>
 
-            <div className="text-sm mt-4">Don't have an account? <Link href="/register" className="text-primary font-semibold">Register</Link></div>
+            <div className="text-sm mt-4">{"Don't have an account?"} <Link href="/register" className="text-primary font-semibold">Register</Link></div>
         </form>
     )
 }

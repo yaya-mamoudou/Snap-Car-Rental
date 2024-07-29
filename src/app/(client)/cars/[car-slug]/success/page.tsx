@@ -1,7 +1,6 @@
 import { Input } from "@nextui-org/react";
-import { Check, CircleCheck } from "lucide-react";
+import { Check } from "lucide-react";
 import Image from "next/image";
-import React from "react";
 import Button from "~/components/common/button";
 import ReservationSteps from "~/components/ui/reservation-steps";
 

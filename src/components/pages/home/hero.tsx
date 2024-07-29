@@ -1,7 +1,6 @@
 "use client";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
-import Input from "~/components/common/input";
 import Select from "~/components/common/select";
 
 export default function Hero() {
