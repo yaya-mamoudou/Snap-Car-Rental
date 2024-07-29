@@ -13,7 +13,7 @@ export default function Layout({
             src="/images/car_texture_black.webp"
             width={500}
             height={300}
-            className="absolute  -left-20 bottom-0 h-[80%] w-2/3 object-contain object-left opacity-50"
+            className="absolute pointer-events-none -left-20 bottom-0 h-[80%] w-2/3 object-contain object-left opacity-50"
           />
         </div>
         <div className="min-h-[inherit] bg-primary/90">{children}</div>

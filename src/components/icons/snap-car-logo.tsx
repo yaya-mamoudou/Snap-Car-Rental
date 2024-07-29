@@ -12,7 +12,7 @@ export default function SnapCarLogoIcon(props: Props) {
       src="/images/logo.png"
       width={width}
       height={height}
-      className={cn("h-[40px] object-contain", className)}
+      className={cn("h-[40px] w-[auto] object-contain", className)}
       alt="logo"
       {...rest}
     />

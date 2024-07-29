@@ -1,7 +1,3 @@
-import Link from "next/link";
-import React, { FormEvent } from "react";
-import Button from "~/components/common/button";
-import Input from "~/components/common/input";
 import LoginForm from "~/components/pages/login/form";
 
 export default function Page() {
