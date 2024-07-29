@@ -7,7 +7,7 @@ import Select from "~/components/common/select";
 export default function Hero() {
   return (
     <div className="md:container">
-      <div className="relative mt-10 flex min-h-[60vh] flex-col items-center justify-end  md:rounded-3xl bg-gradient-to-t from-[#8A8A8A80] to-[#F0F0F080] p-6 !pt-10 sm:p-10 xl:pb-32">
+      <div className="relative md:mt-10 flex min-h-[60vh] flex-col items-center justify-end  md:rounded-3xl bg-gradient-to-t from-[#8A8A8A80] to-[#F0F0F080] p-6 !pt-10 sm:p-10 xl:pb-32">
 
         <div className="xl:absolute mb-10 left-0 top-20 flex justify-center xl:justify-self-start">
           <Image width={200} height={300} className="z-20 relative w-2/3 sm:w-[300px] lg:w-[400px] " src="/images/hero-car.webp" alt="hero car" />
