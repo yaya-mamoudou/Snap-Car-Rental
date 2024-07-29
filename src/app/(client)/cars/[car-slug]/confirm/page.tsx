@@ -17,7 +17,7 @@ export default function Page() {
         <div className="container">
           <h1 className="mb-10 text-2xl font-semibold">Confirm Booking</h1>
 
-          <div className="grid grid-cols-12 gap-x-10 gap-y-10">
+          <div className="grid grid-cols-12 md:gap-x-10 gap-y-10">
             <div className="col-span-12 md:col-span-8">
               <CarCard horizontal {...car} />
             </div>
