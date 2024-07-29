@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Button from "~/components/common/button";
 import CarCard from "~/components/common/car-card";
+import Map from "~/components/common/map";
 import { cars } from "~/components/pages/home/data/mock";
 import ReservationSteps from "~/components/ui/reservation-steps";
 const car = cars(1)[0];
 
-type Props = {};
+const pickupLocation = { lat: 34.1184, lng: -118.3004 }; // Griffith Observatory
+const dropoffLocation = { lat: 34.01, lng: -118.4963 };
+
 export default function Page() {
   return (
     <div className="flex min-h-[inherit] flex-col">
@@ -56,6 +59,10 @@ export default function Page() {
           </div>
 
           <Button className="mt-10 w-full">Confirm</Button>
+
+          <div className="mt-20">
+            <Map dropOff={dropoffLocation} pickup={pickupLocation} />
+          </div>
         </div>
       </div>
     </div>
