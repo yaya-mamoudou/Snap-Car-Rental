@@ -1,6 +1,7 @@
 "use client";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
+import Input from "~/components/common/input";
 import Select from "~/components/common/select";
 
 export default function Hero() {
@@ -32,6 +33,7 @@ export default function Hero() {
               data={[{ label: "Yaya", value: "yaya" }]}
             />
           </div>
+
           <div className="col-span-12 md:col-span-6 xl:col-span-4">
             <DatePicker
               variant="bordered"

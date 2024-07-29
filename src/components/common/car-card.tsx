@@ -1,7 +1,7 @@
 import { Carousel } from "flowbite-react";
 import { BriefcaseBusiness, Settings2, User } from "lucide-react";
 import Image from "next/image";
-import { cars } from "../pages/home/data/mock";
+import { cars } from "../../data/mock";
 import Button from "./button";
 import { cn } from "@nextui-org/react";
 const carsList = cars()[1];

@@ -1,6 +1,6 @@
 import { Pagination } from "@nextui-org/react";
 import CarCard from "~/components/common/car-card";
-import { cars } from "~/components/pages/home/data/mock";
+import { cars } from "~/data/mock";
 import ReservationSteps from "~/components/ui/reservation-steps";
 const carsList = cars(9);
 

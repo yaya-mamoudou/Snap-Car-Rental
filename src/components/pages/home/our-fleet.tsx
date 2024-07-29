@@ -1,5 +1,5 @@
 import CarCard from "~/components/common/car-card";
-import { cars } from "./data/mock";
+import { cars } from "../../../data/mock";
 const carsList = cars();
 
 export default function OurFleet() {

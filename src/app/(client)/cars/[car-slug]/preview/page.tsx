@@ -4,7 +4,7 @@ import React from "react";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";
-import { cars } from "~/components/pages/home/data/mock";
+import { cars } from "~/data/mock";
 import ReservationSteps from "~/components/ui/reservation-steps";
 
 const car = cars(1)[0];

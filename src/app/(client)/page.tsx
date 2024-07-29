@@ -1,3 +1,4 @@
+import { Input } from "@nextui-org/react";
 import InsuranceActionBanner from "~/components/common/insurance-action-banner";
 import CarCollection from "~/components/pages/home/car-collection";
 import Deals from "~/components/pages/home/deals";
