@@ -48,7 +48,7 @@ const Map = ({ pickup, dropOff }: Props) => {
         },
         (result, status) => {
           if (status === window.google.maps.DirectionsStatus.OK && result) {
-            // setDirectionsResponse(result);
+            setDirectionsResponse(result);
           } else {
             console.error(`error fetching directions ${result}`);
           }
