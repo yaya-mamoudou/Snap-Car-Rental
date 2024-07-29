@@ -13,12 +13,23 @@ import SnapCarLogoIcon from "../icons/snap-car-logo";
 
 export default function App() {
   const menuItems = [
-    "Home",
-    "Rent a Car",
-    "Why Choose Us",
-    "Good Deals",
-    "Contact Us",
-    "Register",
+    {
+      label: "Home", href: '/'
+    },
+    {
+      label: "Rent A Car", href: '/cars'
+    },
+    // {
+    //   label: "Contact Us", href: '/register'
+    // },
+    {
+      label: "Why Choose Us", href: '/#why-choose-us'
+    },
+    {
+      label: "Register", href: '/register'
+    },
+    // "Good Deals",
+    // "Contact Us",
   ];
 
   return (
@@ -47,7 +58,7 @@ export default function App() {
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="/cars">
-            Rent a Car
+            Rent Car
           </Link>
         </NavbarItem>
         <NavbarItem>
@@ -60,24 +71,24 @@ export default function App() {
             Good Deals
           </Link>
         </NavbarItem>
-        <NavbarItem>
+        {/* <NavbarItem>
           <Link color="foreground" href="#">
             Contact Us
           </Link>
-        </NavbarItem>
-        <NavbarItem>
+        </NavbarItem> */}
+        {/* <NavbarItem>
           <Link color="foreground" href="#">
             Why Choose Us
           </Link>
-        </NavbarItem>
+        </NavbarItem> */}
       </NavbarContent>
 
       <NavbarContent className="lg:!grow-0" justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#">Register</Link>
+          <Link href="/register">Register</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
+          <Button as={Link} color="primary" href="/login" variant="flat">
             Login
           </Button>
         </NavbarItem>
@@ -85,14 +96,14 @@ export default function App() {
 
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem key={`${item.label}-${index}`}>
             <Link
               className="w-full"
               color={index === menuItems.length - 1 ? "primary" : "foreground"}
-              href="#"
+              href={item.href}
               size="lg"
             >
-              {item}
+              {item.label}
             </Link>
           </NavbarMenuItem>
         ))}

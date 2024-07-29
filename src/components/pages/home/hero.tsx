@@ -24,8 +24,8 @@ export default function Hero() {
             help you save time.
           </p>
           <div className="space-x-4 *:bg-black *:text-white">
-            <Button>Book Now</Button>
-            <Button>See All Cars</Button>
+            <Button>My Booking</Button>
+            <Button link href="/cars">See All Cars</Button>
           </div>
         </div>
 
