@@ -1,3 +1,5 @@
+import { ArrowLeftRight, Car, Grid2X2, Users } from "lucide-react";
+
 export const cars = (length = 3) => Array.from({ length }, (_, index) => ({
     images: [
         "/images/cars/car3.jpg",
@@ -12,3 +14,14 @@ export const cars = (length = 3) => Array.from({ length }, (_, index) => ({
     engine: "Disel",
     id: index
 }));
+
+export const sidebarMenu = [
+    { title: 'Dashboard', path: '/dashboard', icon: Grid2X2, },
+    { title: 'Bookings', path: '/dashboard/booking', icon: ArrowLeftRight, },
+    { title: 'Cars', path: '/dashboard/cars', icon: Car, },
+    {
+        title: 'Users',
+        path: '/dashboard/users',
+        icon: Users,
+    },
+]
