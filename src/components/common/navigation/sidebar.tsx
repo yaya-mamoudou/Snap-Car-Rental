@@ -17,7 +17,7 @@ type LinkItemProps = {
 const SidebarComponent = () => {
   const pathname = usePathname();
   return (
-    <div className="relative h-full items-start rounded-lg bg-black *:flex-col *:text-white">
+    <div className="relative h-full items-start rounded-lg bg-[rgb(45,173,161,var(--tw-bg-opacity))] *:flex-col *:text-white">
       <div className="flex h-[inherit] flex-col items-center overflow-y-auto">
         <div className="mt-10 flex items-center justify-center gap-5">
           <div className="justify-center">

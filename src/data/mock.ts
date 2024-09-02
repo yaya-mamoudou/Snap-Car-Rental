@@ -1,4 +1,5 @@
-import { ArrowLeftRight, Car, Grid2X2, Users } from "lucide-react";
+import { ArrowLeftRight, Car, Grid2X2, NotebookPen, UserRound, Users } from "lucide-react";
+import { BookingStatus } from "~/types";
 
 export const cars = (length = 3) => Array.from({ length }, (_, index) => ({
     images: [
@@ -15,6 +16,14 @@ export const cars = (length = 3) => Array.from({ length }, (_, index) => ({
     id: index
 }));
 
+export const allCars = [
+    { "label": "Toyota Camry, 2022", "value": "toyota_camry_2022" },
+    { "label": "Honda Accord, 2021", "value": "honda_accord_2021" },
+    { "label": "Tesla Model 3, 2023", "value": "tesla_model_3_2023" },
+    { "label": "Ford Mustang, 2020", "value": "ford_mustang_2020" },
+    { "label": "BMW 3 Series, 2022", "value": "bmw_3_series_2022" }
+]
+
 export const sidebarMenu = [
     { title: 'Dashboard', path: '/dashboard', icon: Grid2X2, },
     { title: 'Bookings', path: '/dashboard/booking', icon: ArrowLeftRight, },
@@ -23,5 +32,93 @@ export const sidebarMenu = [
         title: 'Users',
         path: '/dashboard/users',
         icon: Users,
+    }
+]
+
+export const stats = [
+    {
+        type: "cars",
+        name: "Cars",
+        amount: 10,
+        icon: Car,
     },
+    {
+        type: "users",
+        name: "Users",
+        amount: 30,
+        icon: UserRound,
+    },
+    {
+        type: "booking",
+        name: "Bookings",
+        amount: 7,
+        icon: NotebookPen,
+    },
+];
+
+export const users = [
+    {
+        name: "Yaya Mamoudou",
+        createdAt: "2023-08-24T06:22:56.7890Z",
+        profile: "https://randomuser.me/api/portraits/men/10.jpg",
+    },
+    {
+        name: "Akwo Ashang",
+        createdAt: "2023-08-13T23:14:28.7890Z",
+        profile: "https://randomuser.me/api/portraits/men/11.jpg",
+    },
+    {
+        name: "Mobile Bissenge",
+        createdAt: "2023-09-30T11:09:46.7890Z",
+        profile: "https://randomuser.me/api/portraits/men/12.jpg",
+    },
+    {
+        name: "Ngala Alain",
+        createdAt: "2023-09-22T01:26:39.7890Z",
+        profile: "https://randomuser.me/api/portraits/men/13.jpg",
+    },
+    {
+        name: "Muma Brian",
+        createdAt: "2023-08-12T15:38:50.7890Z",
+        profile: "https://randomuser.me/api/portraits/men/14.jpg",
+    },
+];
+
+export const bookings = [
+    {
+        "car": "Honda Accord, 2021",
+        "user": "Yaya Mamoudou",
+        "startDate": "2024-08-24T06:22:56.789Z",
+        "endDate": "2024-08-28T06:22:56.789Z",
+        status: BookingStatus.PAID_AND_ONGOING
+    },
+    {
+        "car": "Tesla Model 3, 2023",
+        "user": "Akwo Ashang",
+        "startDate": "2024-08-13T23:14:28.789Z",
+        "endDate": "2024-08-19T23:14:28.789Z",
+        status: BookingStatus.PAID
+
+    },
+    {
+        "car": "Ford Mustang, 2020",
+        "user": "Mobile Bissenge",
+        "startDate": "2023-09-30T11:09:46.789Z",
+        "endDate": "2023-10-03T11:09:46.789Z",
+        status: BookingStatus.PENDIND_PAYMENT
+    },
+    {
+        "car": "BMW 3 Series, 2022",
+        "user": "Ngala Alain",
+        "startDate": "2023-09-22T01:26:39.789Z",
+        "endDate": "2023-09-25T01:26:39.789Z",
+        status: BookingStatus.PENDIND_PAYMENT
+    },
+    {
+        "car": "Toyota Camry, 2022",
+        "user": "Muma Brian",
+        "startDate": "2023-08-12T15:38:50.789Z",
+        "endDate": "2023-08-16T15:38:50.789Z",
+        status: BookingStatus.EXPIRED
+    }
 ]
