@@ -8,7 +8,7 @@ export default function Layout({
   return (
     <DashboardLayout
       topComponent={<Navbar />}
-      bodyClassName="px-6 2xl:px-16"
+      bodyClassName="px-6 2xl:px-16  w-full"
       className="bg-[#f2f2f2]"
       sideComponent={<SidebarComponent />}
     >

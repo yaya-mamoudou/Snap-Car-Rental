@@ -1,20 +1,92 @@
-import { Avatar } from "@nextui-org/react";
+"use client";
+import {
+  Avatar,
+  cn,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
+  Navbar as Nav,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+} from "@nextui-org/react";
 import { BellDot } from "lucide-react";
+import { usePathname } from "next/navigation";
 import React from "react";
-// import Avatar from '../avatar';
-// import { BellDot } from 'lucide-react';
+import { sidebarMenu } from "~/data/mock";
 
-export default function Navbar() {
+export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const pathname = usePathname();
+
   return (
-    <div className="rounded-2xl bg-gradient-to-b from-transparent to-white px-6 py-2">
-      <div className="flex items-center">
-        {/* <h2>Home</h2> */}
-        <div className="ml-auto flex items-center gap-5 px-6">
-          <BellDot strokeWidth={1.8} className="text-gray-800" size={20} />
-          <Avatar size="sm" fallback="YM" />
-        </div>
-      </div>
-      <div className="">{/* <HeaderActionSection /> */}</div>
-    </div>
+    <Nav
+      className="relative left-[-1.5rem] top-[-0.5rem] w-screen rounded-xl *:max-w-full lg:left-0 lg:top-0 lg:w-full"
+      onMenuOpenChange={setIsMenuOpen}
+    >
+      <NavbarContent>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="lg:hidden"
+        />
+      </NavbarContent>
+
+      <NavbarContent className="flex gap-4" justify="center">
+        <NavbarItem>
+          <div className="flex items-center">
+            <div className="ml-auto flex items-center gap-5">
+              <BellDot strokeWidth={1.8} className="text-gray-800" size={20} />
+
+              <Dropdown>
+                <DropdownTrigger>
+                  <Avatar size="sm" className="cursor-pointer" fallback="YM" />
+                </DropdownTrigger>
+                <DropdownMenu variant="faded" aria-label="Static Actions">
+                  <DropdownItem key="profile">Profile</DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    className="text-danger"
+                    color="danger"
+                  >
+                    Logout
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </div>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarMenu>
+        {sidebarMenu.map((item, index) => {
+          const isExactMatch = pathname === item.path;
+          const isNestedRoute =
+            pathname.startsWith(item.path) &&
+            item.path !== "/dashboard" &&
+            pathname !== "/dashboard";
+
+          const shouldHighlight = isExactMatch || isNestedRoute;
+
+          return (
+            <NavbarMenuItem key={`${item.title}-${index}`}>
+              <Link
+                className={cn(
+                  "w-full text-black",
+                  shouldHighlight && "text-primary",
+                )}
+                href={item.path}
+                size="lg"
+              >
+                {item.title}
+              </Link>
+            </NavbarMenuItem>
+          );
+        })}
+      </NavbarMenu>
+    </Nav>
   );
 }

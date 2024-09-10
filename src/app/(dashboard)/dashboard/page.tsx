@@ -3,7 +3,7 @@ import { Avatar, cn, Divider } from "@nextui-org/react";
 import { format } from "date-fns";
 import { BookCheck } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import Select from "~/components/common/select";
 import { allCars, bookings, cars, stats, users } from "~/data/mock";
 import { BookingStatus } from "~/types";
@@ -16,13 +16,25 @@ type ContainerType = {
 };
 
 export default function DashboardPage() {
+  const [availability, setAvailability] = useState<null | object>(null);
+  const [isVailabilityLoading, setIsVailabilityLoading] = useState(false);
+
+  const handleAvailabilityCheck = () => {
+    setIsVailabilityLoading(true);
+    setTimeout(() => {
+      setAvailability({
+        status: "Not available: only available by 12 Sep 2024",
+      });
+      setIsVailabilityLoading(false);
+    }, 2000);
+  };
   return (
     <div>
       <h1 className="mt-10 text-2xl font-bold text-black">Dashboard</h1>
 
       <div className="mt-4 grid grid-cols-12 gap-3">
         {stats.map((stat) => (
-          <div className="col-span-4">
+          <div className="col-span-6 md:col-span-4">
             <div className="flex gap-4 rounded-lg border-[1px] border-solid bg-white p-6">
               <div className="flex size-[50px] items-center justify-center rounded-full bg-primary p-2 text-white">
                 <stat.icon size={20} strokeWidth={2} />
@@ -44,11 +56,12 @@ export default function DashboardPage() {
             placeholder="Select Car"
             className="mt-4 max-w-[400px]"
             data={allCars}
+            onChange={handleAvailabilityCheck}
           />
         </Container>
         <Container
           seeAllLink="/dashboard/booking"
-          className="col-span-8"
+          className="col-span-12 md:col-span-6 xl:col-span-8"
           title="Recent Bookings"
         >
           {bookings.map((booking) => (
@@ -84,7 +97,7 @@ export default function DashboardPage() {
         </Container>
         <Container
           seeAllLink="/dashboard/users"
-          className="col-span-4"
+          className="col-span-12 md:col-span-6 xl:col-span-4"
           title="Recent Users"
         >
           {users.map((user) => (

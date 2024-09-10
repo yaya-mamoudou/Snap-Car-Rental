@@ -1,20 +1,23 @@
 import { ArrowLeftRight, Car, Grid2X2, NotebookPen, UserRound, Users } from "lucide-react";
 import { BookingStatus } from "~/types";
 
-export const cars = (length = 3) => Array.from({ length }, (_, index) => ({
-    images: [
-        "/images/cars/car3.jpg",
-        "/images/cars/car1.webp",
-        "/images/cars/car2.jpg",
-    ],
-    name: "Toyota Camry, 2022",
-    price: { daily: "$35", month: "$960" },
-    seats: "5",
-    gear: "Auto",
-    bags: "4",
-    engine: "Disel",
-    id: index
-}));
+export const car = (index: number) => (
+    {
+        images: [
+            "/images/cars/car3.jpg",
+            "/images/cars/car1.webp",
+            "/images/cars/car2.jpg",
+        ],
+        name: "Toyota Camry, 2022",
+        price: { daily: "$35", month: "$960" },
+        seats: "5",
+        gear: "Auto",
+        bags: "4",
+        engine: "Disel",
+        id: index
+    }
+)
+export const cars = (length = 3) => Array.from({ length }, (_, index) => (car(index)));
 
 export const allCars = [
     { "label": "Toyota Camry, 2022", "value": "toyota_camry_2022" },
@@ -55,6 +58,29 @@ export const stats = [
         icon: NotebookPen,
     },
 ];
+
+export const dashboardCars = [
+    {
+        "car": "Honda Accord, 2021",
+        status: BookingStatus.PAID_AND_ONGOING
+    },
+    {
+        "car": "Tesla Model 3, 2023",
+        status: BookingStatus.PAID
+    },
+    {
+        "car": "Ford Mustang, 2020",
+        status: BookingStatus.PENDIND_PAYMENT
+    },
+    {
+        "car": "BMW 3 Series, 2022",
+        status: BookingStatus.PENDIND_PAYMENT
+    },
+    {
+        "car": "Toyota Camry, 2022",
+        status: BookingStatus.EXPIRED
+    }
+]
 
 export const users = [
     {
@@ -122,3 +148,19 @@ export const bookings = [
         status: BookingStatus.EXPIRED
     }
 ]
+
+export const status = [
+    { label: "Booked", value: "booked" },
+    { label: "Available", value: "available" },
+    { label: "not-available", value: "not-available" },
+];
+
+export const engines = [
+    { label: "Diesel", value: "diesel" },
+    { label: "Available", value: "available" },
+];
+
+export const wheel = [
+    { label: "Automatic", value: "automatic" },
+    { label: "Manual", value: "manual" },
+];

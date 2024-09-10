@@ -28,7 +28,13 @@ const SidebarComponent = () => {
 
         <div className="mt-20 flex w-3/4 flex-col items-center justify-center gap-2 2xl:items-start 2xl:justify-start">
           {sidebarMenu.map((item, index) => {
-            const shouldHighlight = item.path === pathname;
+            const isExactMatch = pathname === item.path;
+            const isNestedRoute =
+              pathname.startsWith(item.path) &&
+              item.path !== "/dashboard" &&
+              pathname !== "/dashboard";
+
+            const shouldHighlight = isExactMatch || isNestedRoute;
             return (
               <LinkItem
                 key={index}
