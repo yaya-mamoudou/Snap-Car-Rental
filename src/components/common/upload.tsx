@@ -13,7 +13,7 @@ type Props = {
   name?: string;
   multiple?: boolean;
   required?: boolean;
-  errorMessage?: string;
+  errorMessage?: any;
 };
 
 export default function Upload(props: Props) {

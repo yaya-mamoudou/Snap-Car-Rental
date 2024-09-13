@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import Button from "~/components/common/button";
 
-export default function Page({ ...props }) {
+export default function Page() {
   return (
     <div>
       <h1 className="mt-10 text-2xl font-bold text-black">Users Details</h1>

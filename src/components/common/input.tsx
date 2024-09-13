@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { cn, Input as In } from "@nextui-org/react";
 import type { InputProps } from "@nextui-org/react";

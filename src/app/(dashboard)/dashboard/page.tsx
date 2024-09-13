@@ -33,8 +33,8 @@ export default function DashboardPage() {
       <h1 className="mt-10 text-2xl font-bold text-black">Dashboard</h1>
 
       <div className="mt-4 grid grid-cols-12 gap-3">
-        {stats.map((stat) => (
-          <div className="col-span-6 md:col-span-4">
+        {stats.map((stat, index) => (
+          <div key={index} className="col-span-6 md:col-span-4">
             <div className="flex gap-4 rounded-lg border-[1px] border-solid bg-white p-6">
               <div className="flex size-[50px] items-center justify-center rounded-full bg-primary p-2 text-white">
                 <stat.icon size={20} strokeWidth={2} />
@@ -64,8 +64,8 @@ export default function DashboardPage() {
           className="col-span-12 md:col-span-6 xl:col-span-8"
           title="Recent Bookings"
         >
-          {bookings.map((booking) => (
-            <div className="mt-4 flex gap-3">
+          {bookings.map((booking, index) => (
+            <div key={index} className="mt-4 flex gap-3">
               <div className="flex size-[40px] items-center justify-center rounded-full bg-gray-300 p-2 text-white">
                 <BookCheck size={20} strokeWidth={2} />
               </div>
@@ -100,8 +100,8 @@ export default function DashboardPage() {
           className="col-span-12 md:col-span-6 xl:col-span-4"
           title="Recent Users"
         >
-          {users.map((user) => (
-            <div className="mt-4 flex gap-3">
+          {users.map((user, index) => (
+            <div key={index} className="mt-4 flex gap-3">
               <div className="h-fit rounded-full bg-slate-100">
                 <Avatar src={user.profile} fallback={user.name} size="sm" />
               </div>

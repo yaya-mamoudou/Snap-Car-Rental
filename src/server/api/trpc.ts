@@ -8,10 +8,11 @@
  */
 
 import { initTRPC, TRPCError } from "@trpc/server";
+import { cookies } from "next/headers";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { getCookie } from "~/server-actions";
 
-import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
 
 /**
@@ -27,7 +28,12 @@ import { db } from "~/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await getServerAuthSession();
+  const user = await cookies().get('user')
+  console.log(JSON.parse(user?.value ?? '{}'), '=====------');
+
+  const session = {
+    user: { name: 'Yaya' }
+  };
 
   return {
     db,
@@ -97,7 +103,7 @@ export const publicProcedure = t.procedure;
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
 
-  if (!ctx.session || !ctx.session.user) {
+  if (ctx?.session || ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({

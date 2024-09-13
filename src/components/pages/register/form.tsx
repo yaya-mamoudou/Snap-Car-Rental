@@ -187,7 +187,7 @@ export default function RegisterForm() {
             label="Upload Driver's Lisence"
             errorMessage={
               (formik.touched.drivers_lisence &&
-                formik.errors.drivers_lisence) ||
+                formik.errors.drivers_lisence) ??
               ""
             }
             onChange={(e) => handleFileChange(e, "drivers_lisence")}
@@ -197,7 +197,7 @@ export default function RegisterForm() {
         <div className="col-span-12 md:col-span-6">
           <Upload
             errorMessage={
-              (formik.touched.insurance && formik.errors.insurance) || ""
+              (formik.touched.insurance && formik.errors.insurance) ?? ""
             }
             onChange={(e) => handleFileChange(e, "insurance")}
             accept="image/*,.pdf"

@@ -6,7 +6,7 @@ export const uploadFiles = async (selectedFiles: string[], type: uploadType) => 
         const bucketName = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_NAME!;
         const filePath = `${type}_${Date.now()}`;
         const blob = base64ToBlob(file)
-        const { data, error } = await supabase.storage.from(bucketName).upload(filePath, blob.blob, { contentType: blob.mimeType });
+        const { error } = await supabase.storage.from(bucketName).upload(filePath, blob.blob, { contentType: blob.mimeType });
 
         if (error) {
             throw error;

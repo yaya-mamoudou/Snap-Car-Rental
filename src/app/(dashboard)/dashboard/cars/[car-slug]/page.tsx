@@ -3,9 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { car, cars } from "~/data/mock";
 
-export default function Page({ ...props }) {
-  console.log(props);
-
+export default function Page() {
   return (
     <div>
       <h1 className="mb-4 mt-10 text-2xl font-bold text-black">Car Details</h1>

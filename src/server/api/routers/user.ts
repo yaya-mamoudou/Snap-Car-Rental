@@ -40,14 +40,7 @@ export const userRouter = createTRPCRouter({
             })
             const token = generateToken(user.id);
 
-            //     ('token', token, {
-            //     req: ctx.req,
-            //     res: ctx.res,
-            //     httpOnly: true,
-            //     maxAge: 3600, // 1 hour
-            //     path: '/',
-            //   });
-            return { token, user }
+            return { token, data: user }
         }),
     login: publicProcedure
         .use(errorHandlingMiddleware)
@@ -77,7 +70,7 @@ export const userRouter = createTRPCRouter({
             // Generate a token
             const token = generateToken(user.id);
 
-            return { token, user };
+            return { token, data: user };
         }),
     getAllUsers: publicProcedure.query((ops) => {
         return ops.ctx.db.user.findMany()

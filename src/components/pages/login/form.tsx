@@ -4,7 +4,6 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
-import { setCookie } from "~/server-actions";
 import { saveUserInfo } from "~/server-actions/auth";
 import { api } from "~/trpc/react";
 import { loginFormSchema } from "~/types";
@@ -20,13 +19,9 @@ export default function LoginForm() {
     onSubmit: async (e) => {
       mutate(e, {
         onSuccess: async (e) => {
-          console.log("started");
-
-          const num = await saveUserInfo(JSON.stringify(e));
-
-          console.log(num);
-
+          await saveUserInfo(JSON.stringify(e));
           toast.success("Welcome back.✅");
+          console.log(e);
         },
         onError: (error) => {
           toast.error(error.message);
