@@ -1,17 +1,9 @@
 "use client";
 import Image from "next/image";
-import { useEffect } from "react";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";
-import { db } from "~/server/db";
-
 export default function Hero() {
-  useEffect(() => {
-    const users = db.user.findMany();
-    console.log(users);
-  }, []);
-
   return (
     <div className="md:container">
       <div className="relative flex min-h-[60vh] flex-col items-center justify-end bg-gradient-to-t from-[#8A8A8A80] to-[#F0F0F080] p-6 !pt-10 sm:p-10 md:mt-10 md:rounded-3xl xl:pb-32">

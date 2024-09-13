@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { NextUIProvider } from "@nextui-org/system";
-
+import { Toaster } from "react-hot-toast";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
@@ -19,7 +19,10 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
-          <NextUIProvider>{children}</NextUIProvider>
+          <NextUIProvider>
+            <Toaster />
+            {children}
+          </NextUIProvider>
         </TRPCReactProvider>
       </body>
     </html>
