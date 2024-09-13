@@ -8,6 +8,7 @@
  */
 
 import { initTRPC, TRPCError } from "@trpc/server";
+import { cookies } from "next/headers";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -96,6 +97,7 @@ export const publicProcedure = t.procedure;
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
@@ -105,4 +107,25 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
       session: { ...ctx.session, user: ctx.session.user },
     },
   });
+});
+
+export const errorHandlingMiddleware = t.middleware(async ({ next }) => {
+  try {
+    return await next();
+  } catch (error) {
+    if (error instanceof TRPCError) {
+      // Handle known errors
+      throw new TRPCError({
+        code: error.code,
+        message: error.message,
+        cause: error.cause,
+      });
+    }
+
+    // Handle unknown errors
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Something went wrong. Please try again later.',
+    });
+  }
 });
