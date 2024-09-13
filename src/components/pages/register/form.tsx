@@ -1,130 +1,226 @@
-'use client'
-import { Radio, RadioGroup } from '@nextui-org/react';
-import Link from 'next/link';
-import type { FormEvent } from 'react';
-import Button from '~/components/common/button';
-import Input from '~/components/common/input';
-import Upload from '~/components/common/upload';
+"use client";
+import { Radio, RadioGroup } from "@nextui-org/react";
+import { useFormik } from "formik";
+import { omit } from "lodash";
+import Link from "next/link";
+import { useEffect, type FormEvent } from "react";
+import Button from "~/components/common/button";
+import Input from "~/components/common/input";
+import Upload from "~/components/common/upload";
+import { api } from "~/trpc/react";
+import { signupFormSchema } from "~/types";
+import immer, { produce } from "immer";
+import { convertFileToBase64 } from "~/utils/convert-file-to-base64";
+import { Gender } from "@prisma/client";
+import toast from "react-hot-toast";
 
 export default function RegisterForm() {
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e?.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
+  const { mutate, isPending } = api.users.signup.useMutation();
+  const { data } = api.users.getAllUsers.useQuery();
 
-        console.log(data);
+  const formik = useFormik({
+    initialValues: {
+      fullname: "",
+      email: "",
+      phone_number: "",
+      username: "",
+      gender: "" as Gender,
+      password: "",
+      password_confirmation: "",
+      drivers_lisence: "",
+      insurance: "",
+    },
+    validationSchema: signupFormSchema,
+    onSubmit: async (e) => {
+      const data = omit(e, ["password_confirmation"]);
+      data.phone_number = String(data.phone_number);
+      data.insurance = (await convertFileToBase64(
+        data.insurance as unknown as File,
+      )) as string;
+      data.drivers_lisence = (await convertFileToBase64(
+        data.drivers_lisence as unknown as File,
+      )) as string;
 
-        // const res = await fetch('/api/submit-form', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(data),
-        // });
+      mutate(data, {
+        onSuccess: (data) => {
+          toast.success("You have successfully created your account.✅");
+        },
+        onError(error, variables) {
+          toast.error(`${error.message}❌`, {});
+          console.log(error.message, variables);
+        },
+      });
+    },
+  });
 
-        // if (res.ok) {
-        //     console.log('Form submitted successfully');
-        // } else {
-        //     console.error('Form submission failed');
-        // }
+  const handleFileChange = (files: File[], name: string) => {
+    const event = {
+      target: {
+        value: files[0],
+        name,
+      },
     };
-    return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-y-4">
 
-            <div className="grid grid-cols-12 gap-x-0 md:gap-x-4 gap-y-4">
-                <div className="col-span-12 md:col-span-6">
-                    <Input
-                        label="Full Name"
-                        labelPlacement="outside"
-                        placeholder="Enter full name"
-                        variant="bordered"
-                        name="fullname"
-                        required
-                        isRequired
-                    />
-                </div>
-                <div className="col-span-12 md:col-span-6">
-                    <Input
-                        label="Phone Number"
-                        labelPlacement="outside"
-                        placeholder="Enter phone number"
-                        variant="bordered"
-                        name="phone"
-                        type="number"
-                        required
-                        isRequired
-                    />
-                </div>
-                <div className="col-span-12 md:col-span-6">
-                    <Input
-                        label="Username"
-                        labelPlacement="outside"
-                        placeholder="Enter username"
-                        variant="bordered"
-                        name="username"
-                        required
-                        isRequired
-                    />
-                </div>
-                <div className="col-span-12 md:col-span-6">
-                    <Input
-                        label="Email"
-                        labelPlacement="outside"
-                        placeholder="Enter email"
-                        type='email'
-                        variant="bordered"
-                        name="email"
-                        required
-                        isRequired
-                    />
+    formik.handleBlur(event);
+    formik.handleChange(event);
+  };
 
-                </div>
-                <div className="col-span-12 md:col-span-6">
-                    <Input
-                        label="Password"
-                        labelPlacement="outside"
-                        placeholder="✹✹✹✹✹✹✹✹✹✹✹✹"
-                        variant="bordered"
-                        name="password"
-                        type="password"
-                        required
-                        isRequired
-                    />
-                </div>
-                <div className="col-span-12 md:col-span-6">
-                    <Input
-                        label="Confirm Password"
-                        labelPlacement="outside"
-                        placeholder="✹✹✹✹✹✹✹✹✹✹✹✹"
-                        variant="bordered"
-                        name="password_confirmation"
-                        type="password"
-                        isRequired
-                        required
-                    />
-                </div>
+  return (
+    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-y-4">
+      <div className="grid grid-cols-12 gap-x-0 gap-y-4 md:gap-x-4">
+        <div className="col-span-12 md:col-span-6">
+          <Input
+            id="fullname"
+            label="Full Name"
+            labelPlacement="outside"
+            placeholder="Enter full name"
+            variant="bordered"
+            {...formik.getFieldProps("fullname")}
+            errorMessage={formik.touched.fullname && formik.errors.fullname}
+            isInvalid={formik.touched.fullname && !!formik.errors.fullname}
+            isRequired
+          />
+        </div>
+        <div className="col-span-12 md:col-span-6">
+          <Input
+            label="Phone Number"
+            labelPlacement="outside"
+            placeholder="Enter phone number"
+            variant="bordered"
+            {...formik.getFieldProps("phone_number")}
+            errorMessage={
+              formik.touched.phone_number && formik.errors.phone_number
+            }
+            isInvalid={
+              formik.touched.phone_number && !!formik.errors.phone_number
+            }
+            type="number"
+            isRequired
+          />
+        </div>
+        <div className="col-span-12 md:col-span-6">
+          <Input
+            label="Username"
+            labelPlacement="outside"
+            placeholder="Enter username"
+            variant="bordered"
+            {...formik.getFieldProps("username")}
+            errorMessage={formik.touched.username && formik.errors.username}
+            isInvalid={formik.touched.username && !!formik.errors.username}
+            isRequired
+          />
+        </div>
+        <div className="col-span-12 md:col-span-6">
+          <Input
+            label="Email"
+            labelPlacement="outside"
+            placeholder="Enter email"
+            type="email"
+            variant="bordered"
+            {...formik.getFieldProps("email")}
+            errorMessage={formik.touched.email && formik.errors.email}
+            isInvalid={formik.touched.email && !!formik.errors.email}
+            isRequired
+          />
+        </div>
+        <div className="col-span-12 md:col-span-6">
+          <Input
+            label="Password"
+            labelPlacement="outside"
+            placeholder="✹✹✹✹✹✹✹✹✹✹✹✹"
+            variant="bordered"
+            {...formik.getFieldProps("password")}
+            errorMessage={formik.touched.password && formik.errors.password}
+            isInvalid={formik.touched.password && !!formik.errors.password}
+            type="password"
+            isRequired
+          />
+        </div>
+        <div className="col-span-12 md:col-span-6">
+          <Input
+            label="Confirm Password"
+            labelPlacement="outside"
+            placeholder="✹✹✹✹✹✹✹✹✹✹✹✹"
+            variant="bordered"
+            {...formik.getFieldProps("password_confirmation")}
+            errorMessage={
+              formik.touched.password_confirmation &&
+              formik.errors.password_confirmation
+            }
+            isInvalid={
+              formik.touched.password_confirmation &&
+              !!formik.errors.password_confirmation
+            }
+            isRequired
+            type="password"
+          />
+        </div>
 
-                <div className="col-span-12">
-                    <RadioGroup classNames={{ label: 'text-sm text-black', }} name='gender' aria-label='gender' label="Gender" isRequired className='*:flex-row *:gap-x-4 *:text-sm'>
-                        <Radio classNames={{ label: 'text-sm' }} value="male" >Male</Radio>
-                        <Radio classNames={{ label: 'text-sm' }} value="female" >Female</Radio>
-                        <Radio classNames={{ label: 'text-sm' }} value="other" >Other</Radio>
-                    </RadioGroup>
-                </div>
+        <div className="col-span-12">
+          <RadioGroup
+            aria-controls=""
+            classNames={{ label: "text-sm text-black" }}
+            {...formik.getFieldProps("gender")}
+            aria-label="gender"
+            label="Gender"
+            errorMessage={formik.touched.gender && formik.touched.gender}
+            isInvalid={formik.touched.gender && !!formik.errors.gender}
+            isRequired
+            className="*:flex-row *:gap-x-4 *:text-sm"
+          >
+            <Radio classNames={{ label: "text-sm" }} value="MALE">
+              Male
+            </Radio>
+            <Radio classNames={{ label: "text-sm" }} value="FEMALE">
+              Female
+            </Radio>
+            <Radio classNames={{ label: "text-sm" }} value="OTHER">
+              Other
+            </Radio>
+          </RadioGroup>
+        </div>
 
-                <div className='col-span-12 md:col-span-6'>
-                    <Upload accept='image/*,.pdf' required label="Upload Driver's Lisence" />
-                </div>
+        <div className="col-span-12 md:col-span-6">
+          <Upload
+            accept="image/*,.pdf"
+            required
+            label="Upload Driver's Lisence"
+            errorMessage={
+              (formik.touched.drivers_lisence &&
+                formik.errors.drivers_lisence) ||
+              ""
+            }
+            onChange={(e) => handleFileChange(e, "drivers_lisence")}
+          />
+        </div>
 
-                <div className='col-span-12 md:col-span-6'>
-                    <Upload accept='image/*,.pdf' required label="Upload Insurance" />
-                </div>
-            </div>
+        <div className="col-span-12 md:col-span-6">
+          <Upload
+            errorMessage={
+              (formik.touched.insurance && formik.errors.insurance) || ""
+            }
+            onChange={(e) => handleFileChange(e, "insurance")}
+            accept="image/*,.pdf"
+            required
+            label="Upload Insurance"
+          />
+        </div>
+      </div>
 
-            <Button className="mt-6 font-semibold" type="submit">Register</Button>
+      <Button
+        isLoading={isPending}
+        className="mt-6 font-semibold"
+        type="submit"
+      >
+        Register
+      </Button>
 
-            <div className="text-sm mt-4">Already have an account? <Link href="/login" className="text-primary font-semibold">Login</Link></div>
-        </form>
-    )
+      <div className="mt-4 text-sm">
+        Already have an account?{" "}
+        <Link href="/login" className="font-semibold text-primary">
+          Login
+        </Link>
+      </div>
+    </form>
+  );
 }
-
