@@ -1,22 +1,20 @@
 "use client";
 import { Radio, RadioGroup } from "@nextui-org/react";
+import { Gender } from "@prisma/client";
 import { useFormik } from "formik";
 import { omit } from "lodash";
 import Link from "next/link";
-import { useEffect, type FormEvent } from "react";
+import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Upload from "~/components/common/upload";
+import { saveUserInfo } from "~/server-actions/auth";
 import { api } from "~/trpc/react";
 import { signupFormSchema } from "~/types";
-import immer, { produce } from "immer";
 import { convertFileToBase64 } from "~/utils/convert-file-to-base64";
-import { Gender } from "@prisma/client";
-import toast from "react-hot-toast";
 
 export default function RegisterForm() {
   const { mutate, isPending } = api.users.signup.useMutation();
-  const { data } = api.users.getAllUsers.useQuery();
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +40,8 @@ export default function RegisterForm() {
       )) as string;
 
       mutate(data, {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
+          await saveUserInfo(JSON.stringify(data));
           toast.success("You have successfully created your account.✅");
         },
         onError(error, variables) {

@@ -21,7 +21,6 @@ export default function LoginForm() {
         onSuccess: async (e) => {
           await saveUserInfo(JSON.stringify(e));
           toast.success("Welcome back.✅");
-          console.log(e);
         },
         onError: (error) => {
           toast.error(error.message);

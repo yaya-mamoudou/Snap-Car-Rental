@@ -1,6 +1,7 @@
+"use client";
 import {
   Link,
-  Navbar,
+  Navbar as Nav,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
@@ -10,30 +11,38 @@ import {
 } from "@nextui-org/react";
 import Button from "../common/button";
 import SnapCarLogoIcon from "../icons/snap-car-logo";
+import { useGlobalStore } from "~/store/globalStore";
+import UserNav from "../common/navigation/userNav";
 
-export default function App() {
+export default function Navbar() {
+  const user = useGlobalStore((state) => state.state.user);
+
   const menuItems = [
     {
-      label: "Home", href: '/'
+      label: "Home",
+      href: "/",
     },
     {
-      label: "Rent A Car", href: '/cars'
+      label: "Rent A Car",
+      href: "/cars",
     },
     // {
     //   label: "Contact Us", href: '/register'
     // },
     {
-      label: "Why Choose Us", href: '/#why-choose-us'
+      label: "Why Choose Us",
+      href: "/#why-choose-us",
     },
     {
-      label: "Register", href: '/register'
+      label: "Register",
+      href: "/register",
     },
     // "Good Deals",
     // "Contact Us",
   ];
 
   return (
-    <Navbar className="*:container" disableAnimation>
+    <Nav className="*:container" disableAnimation>
       <NavbarContent className="lg:hidden" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
@@ -84,14 +93,23 @@ export default function App() {
       </NavbarContent>
 
       <NavbarContent className="lg:!grow-0" justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="/register">Register</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/login" variant="flat">
-            Login
-          </Button>
-        </NavbarItem>
+        {user && (
+          <NavbarItem>
+            <UserNav user={user} />
+          </NavbarItem>
+        )}
+        {!user && (
+          <>
+            <NavbarItem className="hidden lg:flex">
+              <Link href="/register">Register</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button as={Link} color="primary" href="/login" variant="flat">
+                Login
+              </Button>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
 
       <NavbarMenu>
@@ -108,6 +126,6 @@ export default function App() {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </Navbar>
+    </Nav>
   );
 }

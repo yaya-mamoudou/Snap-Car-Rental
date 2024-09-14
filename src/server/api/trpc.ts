@@ -29,11 +29,8 @@ import { db } from "~/server/db";
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const user = await cookies().get('user')
-  console.log(JSON.parse(user?.value ?? '{}'), '=====------');
 
-  const session = {
-    user: { name: 'Yaya' }
-  };
+  const session: { user: { id: string, role: string }, token: string } = JSON.parse(user?.value ?? '{}');
 
   return {
     db,
@@ -103,7 +100,7 @@ export const publicProcedure = t.procedure;
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
 
-  if (ctx?.session || ctx.session?.user) {
+  if (!ctx?.session || !ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({

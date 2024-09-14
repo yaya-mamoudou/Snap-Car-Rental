@@ -4,9 +4,10 @@ import { generateToken } from "~/helpers";
 import {
     createTRPCRouter,
     errorHandlingMiddleware,
+    protectedProcedure,
     publicProcedure
 } from "~/server/api/trpc";
-import { loginSchema, signupSchema } from "~/types";
+import { loginSchema, profileUpdateSchema, signupSchema } from "~/types";
 import { uploadFiles } from "~/utils/uploadFile";
 
 export const userRouter = createTRPCRouter({
@@ -40,12 +41,14 @@ export const userRouter = createTRPCRouter({
             })
             const token = generateToken(user.id);
 
-            return { token, data: user }
+            return { token, user }
         }),
     login: publicProcedure
         .use(errorHandlingMiddleware)
         .input(loginSchema)
         .mutation(async ({ ctx, input }) => {
+            console.log(ctx.session);
+
             const { email, password } = input;
 
             // Find the user by email
@@ -70,10 +73,16 @@ export const userRouter = createTRPCRouter({
             // Generate a token
             const token = generateToken(user.id);
 
-            return { token, data: user };
+            return { token, user };
         }),
+    me: protectedProcedure.query((ops) => {
+        return ops.ctx.db.user.findUnique({ where: { id: ops.ctx.session.user.id } })
+    }),
+    updateProfile: protectedProcedure.input(profileUpdateSchema).mutation(async ({ ctx, input }) => {
+        return ctx.db.user.update({ where: { id: ctx.session.user.id }, data: input })
+    }),
     getAllUsers: publicProcedure.query((ops) => {
-        return ops.ctx.db.user.findMany()
+        return ops.ctx.db.user.findMany({ skip: 0, take: 10 })
     })
 });
 

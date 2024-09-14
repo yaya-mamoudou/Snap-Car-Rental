@@ -1,9 +1,9 @@
-import "~/styles/globals.css";
-
+import { NextUIProvider } from "@nextui-org/system";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { NextUIProvider } from "@nextui-org/system";
 import { Toaster } from "react-hot-toast";
+import GetUser from "~/components/common/get-user";
+import "~/styles/globals.css";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
@@ -12,15 +12,16 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+type Props = Readonly<{ children: React.ReactNode }>;
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
           <NextUIProvider>
             <Toaster />
+            <GetUser />
             {children}
           </NextUIProvider>
         </TRPCReactProvider>

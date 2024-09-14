@@ -53,7 +53,9 @@ export default function DashboardPage() {
       <div className="mt-10 grid grid-cols-12 gap-4">
         <Container className="col-span-12" title="Check Car Availability">
           <Select
-            placeholder="Select Car"
+            placeholder="Select"
+            label="Select Car"
+            labelPlacement="inside"
             className="mt-4 max-w-[400px]"
             data={allCars}
             onChange={handleAvailabilityCheck}

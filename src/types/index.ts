@@ -1,5 +1,6 @@
 import { z } from "zod";
 import * as yup from 'yup'
+import { Roles } from "@prisma/client";
 
 export enum BookingStatus {
     PAID = 'Paid',
@@ -22,6 +23,15 @@ export const signupSchema = z.object({
     drivers_lisence: z.string(),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     insurance: z.string(),
+});
+
+export const profileUpdateSchema = z.object({
+    fullname: z.string().optional(),
+    phone_number: z.string().optional(),
+    username: z.string().optional(),
+    gender: z.enum(['MALE', 'FEMALE', 'OTHER']).optional(),
+    drivers_lisence: z.string().optional(),
+    insurance: z.string().optional(),
 });
 
 const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/png'];
@@ -56,3 +66,7 @@ export const loginFormSchema = yup.object({
     email: yup.string().email().required(),
     password: yup.string().min(8).required()
 })
+
+export type ProfileType = z.infer<typeof signupSchema> & {
+    role: Roles
+}

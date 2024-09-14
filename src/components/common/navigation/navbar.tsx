@@ -1,11 +1,6 @@
 "use client";
 import {
-  Avatar,
   cn,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Link,
   Navbar as Nav,
   NavbarContent,
@@ -14,14 +9,16 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
-import { BellDot } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { sidebarMenu } from "~/data/mock";
+import { useGlobalStore } from "~/store/globalStore";
+import UserNav from "./userNav";
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const pathname = usePathname();
+  const user = useGlobalStore((state) => state.state.user);
 
   return (
     <Nav
@@ -38,25 +35,7 @@ export default function App() {
       <NavbarContent className="flex gap-4" justify="center">
         <NavbarItem>
           <div className="flex items-center">
-            <div className="ml-auto flex items-center gap-5">
-              <BellDot strokeWidth={1.8} className="text-gray-800" size={20} />
-
-              <Dropdown>
-                <DropdownTrigger>
-                  <Avatar size="sm" className="cursor-pointer" fallback="YM" />
-                </DropdownTrigger>
-                <DropdownMenu variant="faded" aria-label="Static Actions">
-                  <DropdownItem key="profile">Profile</DropdownItem>
-                  <DropdownItem
-                    key="logout"
-                    className="text-danger"
-                    color="danger"
-                  >
-                    Logout
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
+            <UserNav user={user} />
           </div>
         </NavbarItem>
       </NavbarContent>
