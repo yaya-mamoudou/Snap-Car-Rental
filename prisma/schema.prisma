@@ -20,6 +20,12 @@ enum Gender {
     OTHER
 }
 
+enum CarAvailability {
+    BOOKED
+    AVAILABLE
+    UNAVAILABLE
+}
+
 enum BookingStatus {
     PAID
     PAID_AND_ONGOING
@@ -47,22 +53,30 @@ model User {
 }
 
 model Car {
-    id            String    @id @default(auto()) @map("_id") @db.ObjectId
-    name          String?
-    category      String
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    name          String
+    categoryId    String          @db.ObjectId
+    category      CarCategory     @relation(references: [id], fields: [categoryId])
     style         String
+    availability  CarAvailability @default(UNAVAILABLE)
     engine        String
     transmission  String
     drive_train   String
-    seats         Int
+    seats         String
     fuel          String
-    MPG           String
-    features      String
-    luggages      Int
-    daily_price   Int
-    monthly_price Int
-    description   String
+    luggages      String
+    daily_price   String
+    MPG           String?
+    features      String?
+    monthly_price String?
+    description   String?
     bookings      Booking[]
+}
+
+model CarCategory {
+    id   String @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+    Car  Car[]
 }
 
 model Booking {

@@ -150,9 +150,9 @@ export const bookings = [
 ]
 
 export const status = [
-    { label: "Booked", value: "booked" },
-    { label: "Available", value: "available" },
-    { label: "not-available", value: "not-available" },
+    { label: "Booked", value: "BOOKED" },
+    { label: "Available", value: "AVAILABLE" },
+    { label: "Unavailable", value: "UNAVAILABLE" },
 ];
 
 export const engines = [

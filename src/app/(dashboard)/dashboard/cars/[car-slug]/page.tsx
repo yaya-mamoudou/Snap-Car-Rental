@@ -1,9 +1,16 @@
+"use client";
+
 import { Carousel } from "flowbite-react";
 import Image from "next/image";
+import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 import { car, cars } from "~/data/mock";
+import { api } from "~/trpc/react";
 
 export default function Page() {
+  const params: Record<"car-slug", string> = useParams();
+  const { data: car } = api.cars.getById.useQuery({ id: params["car-slug"] });
+
   return (
     <div>
       <h1 className="mb-4 mt-10 text-2xl font-bold text-black">Car Details</h1>
@@ -27,7 +34,7 @@ export default function Page() {
                 },
               }}
             >
-              {car(1)?.images.map((img, key) => (
+              {/* {car?.images.map((img, key) => (
                 <Image
                   key={key}
                   alt="..."
@@ -36,7 +43,7 @@ export default function Page() {
                   height={200}
                   className="size-full object-contain md:size-2/3"
                 />
-              ))}
+              ))} */}
             </Carousel>
           </div>
         </div>

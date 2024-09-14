@@ -7,7 +7,9 @@
  * need to use are documented accordingly near the end.
  */
 
+import { Roles } from "@prisma/client";
 import { initTRPC, TRPCError } from "@trpc/server";
+import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import superjson from "superjson";
 import { ZodError } from "zod";
@@ -100,7 +102,7 @@ export const publicProcedure = t.procedure;
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
 
-  if (!ctx?.session || !ctx.session?.user) {
+  if (!ctx?.session || !verify(ctx.session?.token, process.env.JWT_SECRET || '')) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
@@ -131,3 +133,13 @@ export const errorHandlingMiddleware = t.middleware(async ({ next }) => {
     });
   }
 });
+
+export const roleMiddleware = (role: Roles) => t.middleware(async ({ next, ctx }) => {
+  if (ctx.session.user.role === role) return await next();
+  else throw new TRPCError({
+    code: "FORBIDDEN",
+    message: 'You do not have access to this ressource. Ask your administrator to grant you access'
+  })
+
+
+})

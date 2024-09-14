@@ -7,7 +7,7 @@ import {
     protectedProcedure,
     publicProcedure
 } from "~/server/api/trpc";
-import { loginSchema, profileUpdateSchema, signupSchema } from "~/types";
+import { loginSchema, profileUpdateSchema, signupSchema } from "./schema";
 import { uploadFiles } from "~/utils/uploadFile";
 
 export const userRouter = createTRPCRouter({
