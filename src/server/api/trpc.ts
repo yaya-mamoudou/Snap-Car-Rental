@@ -32,11 +32,11 @@ import { db } from "~/server/db";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const user = await cookies().get('user')
 
-  const session: { user: { id: string, role: string }, token: string } = JSON.parse(user?.value ?? '{}');
+  const token = JSON.parse(user?.value ?? '{}');
 
   return {
     db,
-    session,
+    session: { token, id: '', role: '' },
     ...opts,
   };
 };
@@ -101,14 +101,15 @@ export const publicProcedure = t.procedure;
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  const user = verify(ctx.session?.token, process.env.JWT_SECRET || '') as { userId: string, role: Roles } | undefined
 
-  if (!ctx?.session || !verify(ctx.session?.token, process.env.JWT_SECRET || '')) {
+  if (!ctx?.session || !ctx.session?.token || !user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...ctx.session, id: user.userId, role: user.role },
     },
   });
 });
@@ -135,7 +136,7 @@ export const errorHandlingMiddleware = t.middleware(async ({ next }) => {
 });
 
 export const roleMiddleware = (role: Roles) => t.middleware(async ({ next, ctx }) => {
-  if (ctx.session.user.role === role) return await next();
+  if (ctx.session.role === role) return await next();
   else throw new TRPCError({
     code: "FORBIDDEN",
     message: 'You do not have access to this ressource. Ask your administrator to grant you access'

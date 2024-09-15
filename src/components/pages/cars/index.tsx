@@ -1,16 +1,40 @@
 "use client";
 import { Divider, Spinner } from "@nextui-org/react";
-import { Eye, Pen, Plus, Search } from "lucide-react";
+import { Eye, Pen, Plus, Search, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import CreateCarDialog from "./create-car-dialog";
 import { api } from "~/trpc/react";
+import toast from "react-hot-toast";
 
 export default function CarsList() {
   const { data: cars, isPending } = api.cars.getAll.useQuery();
+  const [deleting, setDeleting] = useState<string>("");
+  const utils = api.useUtils();
+  const { mutate: deleteCar, isPending: isDeleting } =
+    api.cars.deleteCar.useMutation();
+
+  const handleDelete = (id: string) => {
+    setDeleting(id);
+    deleteCar(
+      { id },
+      {
+        onSuccess: (res) => {
+          utils.cars.getAll.invalidate();
+          toast.success("Car has been deleted");
+        },
+        onError: (err) => {
+          toast.error(err.message);
+        },
+        onSettled: () => {
+          setDeleting("");
+        },
+      },
+    );
+  };
 
   return (
     <div className="mt-4 rounded-lg bg-white py-4">
@@ -47,33 +71,29 @@ export default function CarsList() {
                 className="h-full w-full rounded-lg object-contain"
               />
             </div>
-            <div className="flex flex-col gap-y-2">
-              <Link
-                href={`/dashboard/cars/${car.id}`}
-                className="hover:underline"
-              >
-                {car.name}
-              </Link>
+            <div className="flex w-full justify-between gap-y-2">
+              <div>
+                <Link
+                  href={`/dashboard/cars/${car.id}`}
+                  className="hover:underline"
+                >
+                  {car.name}
+                </Link>
+                <div className="text-sm text-gray-500">
+                  Status:{" "}
+                  <span className="font-semibold"> {car.availability}</span>
+                </div>
+              </div>
               <div className="flex gap-2">
                 <Button
-                  link
-                  size="sm"
+                  onClick={() => !isDeleting && handleDelete(car.id)}
+                  isLoading={deleting === car.id}
                   variant="bordered"
-                  href={`/dashboard/cars/${car.id}/edit`}
-                  className="border-[1px]"
-                >
-                  <Pen size={14} />
-                  Edit
-                </Button>
-
-                <Button
-                  link
                   size="sm"
-                  href={`/dashboard/cars/${car.id}`}
-                  className="border-[1px]"
+                  className="border-red-600 text-red-600"
                 >
-                  <Eye size={14} />
-                  View
+                  <Trash size={14} />
+                  Delete
                 </Button>
               </div>
             </div>

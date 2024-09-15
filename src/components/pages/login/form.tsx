@@ -1,15 +1,23 @@
 "use client";
 import { useFormik } from "formik";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import { saveUserInfo } from "~/server-actions/auth";
+import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
-import { loginFormSchema } from "~/types";
+import { loginFormSchema, ProfileType } from "~/types";
 
 export default function LoginForm() {
+  const query = useSearchParams();
+  const redirect = query.get("redirect");
+  const setUser = useGlobalStore((state) => state.setUser);
+  const utils = api.useUtils();
+  const router = useRouter();
   const { mutate, isPending } = api.users.login.useMutation();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -18,8 +26,12 @@ export default function LoginForm() {
     validationSchema: loginFormSchema,
     onSubmit: async (e) => {
       mutate(e, {
-        onSuccess: async (e) => {
-          await saveUserInfo(JSON.stringify(e));
+        onSuccess: async (data) => {
+          setUser(data.user as ProfileType);
+          await saveUserInfo(JSON.stringify(data.token));
+
+          utils.users.me.invalidate();
+          router.replace(redirect ?? "/dashboard");
           toast.success("Welcome back.✅");
         },
         onError: (error) => {
@@ -28,6 +40,7 @@ export default function LoginForm() {
       });
     },
   });
+
   return (
     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-y-4">
       <Input
@@ -65,7 +78,10 @@ export default function LoginForm() {
 
       <div className="mt-4 text-sm">
         {"Don't have an account?"}{" "}
-        <Link href="/register" className="font-semibold text-primary">
+        <Link
+          href={`/register${redirect && `?redirect=${redirect}`}`}
+          className="font-semibold text-primary"
+        >
           Register
         </Link>
       </div>

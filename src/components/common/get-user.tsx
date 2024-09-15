@@ -1,20 +1,34 @@
 "use client";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { authRouter } from "~/helpers";
+import { saveUserInfo } from "~/server-actions/auth";
 import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
 import { ProfileType } from "~/types";
 
 export default function GetUser() {
   const setUser = useGlobalStore((state) => state.setUser);
-  const { isFetching, refetch, data } = api.users.me.useQuery(undefined, {
-    enabled: false,
-  });
-  useEffect(() => {
-    refetch().then((res) => {
-      setUser(res.data as ProfileType);
-    });
-  }, []);
+  const pathname = usePathname();
+  const router = useRouter();
 
-  //   useGlobalStore.setState({ state: { me: user as ProfileType } });
+  const { error, data, isLoading } = api.users.me.useQuery();
+
+  console.log(isLoading, "it is loading");
+
+  useEffect(() => {
+    setUser(data as ProfileType);
+    // saveUserInfo(data.);
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      if (error.data?.code === "UNAUTHORIZED") {
+        if (!pathname.startsWith("/login") && !pathname.startsWith("/register"))
+          authRouter(router, "/login");
+      }
+    }
+  }, [error]);
+
   return null;
 }

@@ -4,17 +4,26 @@ import { Gender } from "@prisma/client";
 import { useFormik } from "formik";
 import { omit } from "lodash";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Upload from "~/components/common/upload";
 import { saveUserInfo } from "~/server-actions/auth";
+import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
-import { signupFormSchema } from "~/types";
+import { ProfileType, signupFormSchema } from "~/types";
 import { convertFileToBase64 } from "~/utils/convert-file-to-base64";
 
 export default function RegisterForm() {
   const { mutate, isPending } = api.users.signup.useMutation();
+  const utils = api.useUtils();
+  const query = useSearchParams();
+  const redirect = query.get("redirect");
+  const { refetch } = api.users.me.useQuery(undefined, { enabled: false });
+  const setUser = useGlobalStore((state) => state.setUser);
+
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +51,10 @@ export default function RegisterForm() {
       mutate(data, {
         onSuccess: async (data) => {
           await saveUserInfo(JSON.stringify(data));
+          const res = await refetch();
+          setUser(res.data as ProfileType);
           toast.success("You have successfully created your account.✅");
+          router.replace(redirect ?? "/dashboard");
         },
         onError(error, variables) {
           toast.error(`${error.message}❌`, {});
@@ -216,7 +228,10 @@ export default function RegisterForm() {
 
       <div className="mt-4 text-sm">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-primary">
+        <Link
+          href={`/login${redirect && `?redirect=${redirect}`}`}
+          className="font-semibold text-primary"
+        >
           Login
         </Link>
       </div>

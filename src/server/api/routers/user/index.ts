@@ -39,7 +39,7 @@ export const userRouter = createTRPCRouter({
                     password: hashedPassword
                 }
             })
-            const token = generateToken(user.id);
+            const token = generateToken(user.id, user.role);
 
             return { token, user }
         }),
@@ -71,15 +71,15 @@ export const userRouter = createTRPCRouter({
             }
 
             // Generate a token
-            const token = generateToken(user.id);
+            const token = generateToken(user.id, user.role);
 
             return { token, user };
         }),
     me: protectedProcedure.query((ops) => {
-        return ops.ctx.db.user.findUnique({ where: { id: ops.ctx.session.user.id } })
+        return ops.ctx.db.user.findUnique({ where: { id: ops.ctx.session.id } })
     }),
     updateProfile: protectedProcedure.input(profileUpdateSchema).mutation(async ({ ctx, input }) => {
-        return ctx.db.user.update({ where: { id: ctx.session.user.id }, data: input })
+        return ctx.db.user.update({ where: { id: ctx.session.id }, data: input })
     }),
     getAllUsers: publicProcedure.query((ops) => {
         return ops.ctx.db.user.findMany({ skip: 0, take: 10 })

@@ -12,3 +12,7 @@ export async function setCookie(name: string, value: string, options: Partial<Re
 export async function getCookie(name: string) {
     return cookieStore.get(name)?.value
 }
+
+export async function deleteCookie(name: string) {
+    return cookieStore.delete(name)
+}

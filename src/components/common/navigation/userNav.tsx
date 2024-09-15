@@ -10,7 +10,7 @@ import React from "react";
 import { ProfileType } from "~/types";
 
 export default function UserNav({ user }: { user: Partial<ProfileType> }) {
-  const avatarFallback = user.fullname
+  const avatarFallback = user?.fullname
     ? `${user.fullname?.split(" ")[0]?.[0]}${user.fullname?.split(" ")[1]?.[0]}`
     : "";
   return (
@@ -18,16 +18,16 @@ export default function UserNav({ user }: { user: Partial<ProfileType> }) {
       <BellDot strokeWidth={1.8} className="text-gray-800" size={20} />
 
       <div className="hidden lg:block">
-        {user.fullname} [
+        {user?.fullname} [
         <span className="text-tiny font-semibold text-gray-500">
-          {user.role}
+          {user?.role}
         </span>
         ]
       </div>
       <Dropdown>
         <DropdownTrigger>
           <Avatar
-            title={user.fullname}
+            title={user?.fullname}
             size="sm"
             className="cursor-pointer"
             fallback={avatarFallback}

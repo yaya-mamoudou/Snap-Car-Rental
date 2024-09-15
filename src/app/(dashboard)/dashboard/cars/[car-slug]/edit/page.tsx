@@ -5,23 +5,24 @@ import { useFormik } from "formik";
 import { omit } from "lodash";
 import { DollarSign } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Select from "~/components/common/select";
 import { engines, status, wheel } from "~/data/mock";
+import { getCookie } from "~/server-actions";
 import { api } from "~/trpc/react";
 import { createCarFormSchema } from "~/types";
 
 export default function page() {
   const params: Record<"car-slug", string> = useParams();
   const carSlug = params["car-slug"];
-  const { data: car } = api.cars.getById.useQuery({ id: carSlug });
+  const { data: car, isFetching } = api.cars.getById.useQuery({ id: carSlug });
   const { data: categories } = api.cars.getCategories.useQuery();
   const utils = api.useUtils();
-
   const { mutate, isPending } = api.cars.update.useMutation();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -41,6 +42,7 @@ export default function page() {
       description: "",
     },
     validationSchema: createCarFormSchema,
+    enableReinitialize: true,
     onSubmit: (formData) => {
       mutate(
         { carId: carSlug, ...formData },
@@ -62,7 +64,6 @@ export default function page() {
     if (car) {
       formik.setValues(omit(car, ["id"]) as any);
     }
-    console.log(car);
   }, [car]);
 
   return (

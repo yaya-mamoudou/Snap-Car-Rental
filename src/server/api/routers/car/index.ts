@@ -11,14 +11,14 @@ import { omit } from "lodash";
 
 export const carRouter = createTRPCRouter({
     create: protectedProcedure
-        .use(roleMiddleware('CLIENT'))
+        .use(roleMiddleware('ADMIN'))
         .use(errorHandlingMiddleware)
         .input(createCarSchema)
         .mutation(async ({ ctx, input }) => {
             return ctx.db.car.create({ data: input })
         }),
     update: protectedProcedure
-        .use(roleMiddleware("CLIENT"))
+        .use(roleMiddleware("ADMIN"))
         .use(errorHandlingMiddleware)
         .input(updateCarSchema)
         .mutation(async ({ ctx, input }) => {
@@ -35,7 +35,14 @@ export const carRouter = createTRPCRouter({
         id: z.string()
     })).query(({ ctx, input }) => {
         return ctx.db.car.findUnique({ where: { id: input.id } })
-    })
+    }),
+    deleteCar: protectedProcedure
+        .use(roleMiddleware('ADMIN'))
+        .use(errorHandlingMiddleware)
+        .input(z.object({ id: z.string() }))
+        .mutation(({ ctx, input }) => {
+            return ctx.db.car.delete({ where: { id: input.id } })
+        })
 });
 
 
