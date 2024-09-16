@@ -9,16 +9,22 @@ import { createCarSchema, updateCarSchema } from "./schema";
 import { z } from "zod";
 import { omit } from "lodash";
 
+const paginationSchema = z.object({
+    per_page: z.number(),
+    page: z.number(),
+    sort: z.enum(['desc', 'asc'])
+})
+
 export const carRouter = createTRPCRouter({
     create: protectedProcedure
-        .use(roleMiddleware('ADMIN'))
+        .use(roleMiddleware(['CLIENT']))
         .use(errorHandlingMiddleware)
         .input(createCarSchema)
         .mutation(async ({ ctx, input }) => {
             return ctx.db.car.create({ data: input })
         }),
     update: protectedProcedure
-        .use(roleMiddleware("ADMIN"))
+        .use(roleMiddleware(["ADMIN"]))
         .use(errorHandlingMiddleware)
         .input(updateCarSchema)
         .mutation(async ({ ctx, input }) => {
@@ -28,20 +34,48 @@ export const carRouter = createTRPCRouter({
     getCategories: publicProcedure.use(errorHandlingMiddleware).query(({ ctx }) => {
         return ctx.db.carCategory.findMany()
     }),
-    getAll: publicProcedure.use(errorHandlingMiddleware).query(({ ctx }) => {
-        return ctx.db.car.findMany()
-    }),
+    addCategory: protectedProcedure.use(errorHandlingMiddleware)
+        .use(roleMiddleware(['ADMIN']))
+        .input(z.object({ name: z.string() }))
+        .mutation(({ ctx, input }) => {
+            return ctx.db.carCategory.create({ data: { name: input.name } })
+        }),
+    getAll: publicProcedure.use(errorHandlingMiddleware)
+        .input(paginationSchema.partial())
+        .query(async ({ ctx, input }) => {
+            const { sort = 'asc', per_page = 8, page = 1 } = input
+
+            const list = ctx.db.car.findMany({ skip: per_page * (page - 1), take: per_page, orderBy: { createdAt: sort } })
+            const count = ctx.db.car.count()
+
+            const res = await Promise.all([list, count])
+
+            const totalPages = Math.ceil(res[1] / per_page)
+
+            return {
+                meta: { per_page: per_page, current_page: page, total_pages: totalPages },
+                data: res[0]
+            }
+        }),
     getById: publicProcedure.use(errorHandlingMiddleware).input(z.object({
         id: z.string()
     })).query(({ ctx, input }) => {
         return ctx.db.car.findUnique({ where: { id: input.id } })
     }),
     deleteCar: protectedProcedure
-        .use(roleMiddleware('ADMIN'))
+        .use(roleMiddleware(['ADMIN']))
         .use(errorHandlingMiddleware)
-        .input(z.object({ id: z.string() }))
+        .input(z.object({ id: z.string().optional() }))
         .mutation(({ ctx, input }) => {
             return ctx.db.car.delete({ where: { id: input.id } })
+        }),
+    getCarAvailability: publicProcedure
+        .use(errorHandlingMiddleware)
+        .input(z.object({
+            id: z.string()
+        })).mutation(async ({ ctx, input }) => {
+            const car = await ctx.db.car.findUnique({ where: { id: input.id } })
+            return
         })
 });
 

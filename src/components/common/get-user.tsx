@@ -12,13 +12,13 @@ export default function GetUser() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { error, data, isLoading } = api.users.me.useQuery();
-
-  console.log(isLoading, "it is loading");
+  const { error, data, isLoading } = api.users.me.useQuery(undefined, {
+    retry: 0,
+  });
 
   useEffect(() => {
-    setUser(data as ProfileType);
-    // saveUserInfo(data.);
+    console.log(data);
+    data && setUser(data as ProfileType);
   }, [data]);
 
   useEffect(() => {

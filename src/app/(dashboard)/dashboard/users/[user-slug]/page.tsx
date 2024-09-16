@@ -1,10 +1,17 @@
+"use client";
 import { cn, Divider } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import React from "react";
 import Button from "~/components/common/button";
+import { api } from "~/trpc/react";
 
 export default function Page() {
+  const params: { "user-slug": string } = useParams();
+  const userId = params["user-slug"];
+  const { data: user, isPending } = api.users.get.useQuery({ id: userId });
+
   return (
     <div>
       <h1 className="mt-10 text-2xl font-bold text-black">Users Details</h1>
@@ -18,23 +25,23 @@ export default function Page() {
         />
         <Divider className="bg-gray-200" />
         <div className="*:p-2 odd:*:bg-gray-50">
-          <Item label="Full Name" value={"Yaya Mamoudou"} />
-          <Item label="Email" value={"yayatoure@gmail.com"} />
+          <Item label="Full Name" value={user?.fullname} />
+          <Item label="Email" value={user?.email} />
 
-          <Item label="Username" value={"yaya_mamoudou"} />
-          <Item label="Phone Number" value={"+237 692 904 019"} />
+          <Item label="Username" value={user?.username} />
+          <Item label="Phone Number" value={user?.phone_number} />
 
-          <Item label="Gender" value={"Male"} />
+          <Item label="Gender" value={user?.gender} />
 
           <Item
             label="Lisence"
             value="driver_lisence.pdf"
-            link="https://www.google.com"
+            link={user?.drivers_lisence}
           />
           <Item
             label="Insurance"
             value="driver_insurance.pdf"
-            link="https://www.google.com"
+            link={user?.insurance}
           />
         </div>
       </div>
@@ -44,8 +51,8 @@ export default function Page() {
 
 type ItemProps = {
   label: string;
-  value: string;
-  link?: string;
+  value?: string | null;
+  link?: string | null;
 };
 
 const Item = (props: ItemProps) => {

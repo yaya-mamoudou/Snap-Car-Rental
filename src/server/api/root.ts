@@ -1,6 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { carRouter } from "./routers/car";
+import { globalRouter } from "./routers/global";
 
 /**
  * This is the primary router for your server.
@@ -9,7 +10,8 @@ import { carRouter } from "./routers/car";
  */
 export const appRouter = createTRPCRouter({
   users: userRouter,
-  cars: carRouter
+  cars: carRouter,
+  global: globalRouter
 });
 
 // export type definition of API

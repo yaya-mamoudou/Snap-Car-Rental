@@ -1,17 +1,16 @@
+import { cn } from "@nextui-org/react";
 import { Carousel } from "flowbite-react";
 import { BriefcaseBusiness, Settings2, User } from "lucide-react";
 import Image from "next/image";
-import { cars } from "../../data/mock";
 import Button from "./button";
-import { cn } from "@nextui-org/react";
-const carsList = cars()[1];
+import { createCarSchema } from "~/server/api/routers/car/schema";
+import { z } from "zod";
 
-type Props = Partial<typeof carsList> & {
+type Props = Partial<z.infer<typeof createCarSchema>> & {
   horizontal?: boolean;
+  id: string;
 };
 const CarCard = (props: Props) => {
-  props?.images;
-
   return (
     <div
       className={cn(
@@ -31,7 +30,7 @@ const CarCard = (props: Props) => {
           leftControl={<div></div>}
           indicators={!props.horizontal}
         >
-          {props?.images
+          {/* {props?.images
             ?.slice(0, props.horizontal ? 1 : undefined)
             ?.map((img, key) => (
               <Image
@@ -42,7 +41,7 @@ const CarCard = (props: Props) => {
                 height={200}
                 className="size-full object-cover"
               />
-            ))}
+            ))} */}
         </Carousel>
       </div>
       <div className="mt-5 pl-2">
@@ -50,35 +49,31 @@ const CarCard = (props: Props) => {
         <div className="mt-2 text-tiny font-semibold text-gray-500">
           <div>
             <span>
-              {props?.price?.daily}/<span className="text-[0.6rem]">Day</span>
+              {props?.daily_price}/<span className="text-[0.6rem]">Day</span>
             </span>
             <span className="mx-2">|</span>
             <span>
-              {props?.price?.month}/{" "}
+              {props?.monthly_price}/{" "}
               <span className="text-[0.6rem]">Month</span>
             </span>
           </div>
           <div className="mt-2">{props?.engine} Engine</div>
           <div className="mt-2 flex gap-4 *:flex *:items-center *:gap-2">
             <div>
-              <Settings2 size={16} /> {props?.gear}
+              <Settings2 size={16} /> {props?.transmission}
             </div>
             <div>
               <User size={16} /> {props?.seats}
             </div>
 
             <div>
-              <BriefcaseBusiness size={16} /> {props?.bags}
+              <BriefcaseBusiness size={16} /> {props?.luggages}
             </div>
           </div>
         </div>
       </div>
       {!props.horizontal && (
-        <Button
-          link
-          href={`/cars/${props?.id}/preview`}
-          className="mt-6 w-full"
-        >
+        <Button link href={`/cars/${props.id}/preview`} className="mt-6 w-full">
           Rent Now
         </Button>
       )}

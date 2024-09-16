@@ -50,6 +50,8 @@ model User {
     password        String?
     bookings        Booking[]
     role            Roles     @default(CLIENT)
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
 }
 
 model Car {
@@ -71,12 +73,16 @@ model Car {
     monthly_price String?
     description   String?
     bookings      Booking[]
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
 }
 
 model CarCategory {
-    id   String @id @default(auto()) @map("_id") @db.ObjectId
-    name String
-    Car  Car[]
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    name      String
+    Car       Car[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Booking {
@@ -89,4 +95,6 @@ model Booking {
     user       User          @relation(references: [id], fields: [userId])
     carId      String        @db.ObjectId
     car        Car           @relation(references: [id], fields: [carId])
+    createdAt  DateTime      @default(now())
+    updatedAt  DateTime      @updatedAt
 }

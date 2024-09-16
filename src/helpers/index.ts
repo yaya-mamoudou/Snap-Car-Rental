@@ -9,5 +9,6 @@ export const generateToken = (userId: string, role: string) => {
 };
 
 export const authRouter = (router: AppRouterInstance, path: string, redirect = location.pathname) => {
-    router.replace(`${path}?redirect=${redirect}`,)
+    // router.replace(`${path}?redirect=${redirect}`,)
+    location.href = `${path}?redirect=${redirect}`
 }

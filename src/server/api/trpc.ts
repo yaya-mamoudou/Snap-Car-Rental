@@ -101,20 +101,25 @@ export const publicProcedure = t.procedure;
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-  const user = verify(ctx.session?.token, process.env.JWT_SECRET || '') as { userId: string, role: Roles } | undefined
+  try {
+    const user = verify(ctx.session?.token, process.env.JWT_SECRET || '') as { userId: string, role: Roles } | undefined
 
-  if (!ctx?.session || !ctx.session?.token || !user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!ctx?.session || !ctx.session?.token || !user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, id: user.userId, role: user.role },
+      },
+    });
+  } catch (error: any) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: error.message });
   }
-  return next({
-    ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, id: user.userId, role: user.role },
-    },
-  });
 });
 
 export const errorHandlingMiddleware = t.middleware(async ({ next }) => {
+
   try {
     return await next();
   } catch (error) {
@@ -135,8 +140,8 @@ export const errorHandlingMiddleware = t.middleware(async ({ next }) => {
   }
 });
 
-export const roleMiddleware = (role: Roles) => t.middleware(async ({ next, ctx }) => {
-  if (ctx.session.role === role) return await next();
+export const roleMiddleware = (roles: Roles[]) => t.middleware(async ({ next, ctx }) => {
+  if (roles.includes(ctx.session.role as Roles)) return await next();
   else throw new TRPCError({
     code: "FORBIDDEN",
     message: 'You do not have access to this ressource. Ask your administrator to grant you access'

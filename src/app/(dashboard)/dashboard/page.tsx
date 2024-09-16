@@ -1,11 +1,12 @@
 "use client";
-import { Avatar, cn, Divider } from "@nextui-org/react";
+import { Avatar, cn, Divider, Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
-import { BookCheck } from "lucide-react";
+import { BookCheck, Car, NotebookPen, UserRound } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import Select from "~/components/common/select";
-import { allCars, bookings, cars, stats, users } from "~/data/mock";
+import { bookings } from "~/data/mock";
+import { api } from "~/trpc/react";
 import { BookingStatus } from "~/types";
 
 type ContainerType = {
@@ -16,18 +17,17 @@ type ContainerType = {
 };
 
 export default function DashboardPage() {
-  const [availability, setAvailability] = useState<null | object>(null);
-  const [isVailabilityLoading, setIsVailabilityLoading] = useState(false);
+  const { data: cars } = api.cars.getAll.useQuery();
+  const { data: statsData } = api.global.getStats.useQuery();
+  const stats = addIconsToStats(statsData ?? []);
+  const { data: users } = api.users.getAllUsers.useQuery();
 
-  const handleAvailabilityCheck = () => {
-    setIsVailabilityLoading(true);
-    setTimeout(() => {
-      setAvailability({
-        status: "Not available: only available by 12 Sep 2024",
-      });
-      setIsVailabilityLoading(false);
-    }, 2000);
-  };
+  const {
+    mutate: fetchCarAvailability,
+    data,
+    isPending: isFetchingAvailability,
+  } = api.cars.getCarAvailability.useMutation();
+
   return (
     <div>
       <h1 className="mt-10 text-2xl font-bold text-black">Dashboard</h1>
@@ -37,12 +37,12 @@ export default function DashboardPage() {
           <div key={index} className="col-span-6 md:col-span-4">
             <div className="flex gap-4 rounded-lg border-[1px] border-solid bg-white p-6">
               <div className="flex size-[50px] items-center justify-center rounded-full bg-primary p-2 text-white">
-                <stat.icon size={20} strokeWidth={2} />
+                {stat.icon && <stat.icon size={20} strokeWidth={2} />}
               </div>
               <div>
                 <div className="text-black/50">{stat.name}</div>
                 <div className="text-lg font-semibold text-black">
-                  {stat.amount}
+                  {stat.count}
                 </div>
               </div>
             </div>
@@ -53,12 +53,15 @@ export default function DashboardPage() {
       <div className="mt-10 grid grid-cols-12 gap-4">
         <Container className="col-span-12" title="Check Car Availability">
           <Select
+            endContent={isFetchingAvailability && <Spinner size="lg" />}
             placeholder="Select"
             label="Select Car"
             labelPlacement="inside"
             className="mt-4 max-w-[400px]"
-            data={allCars}
-            onChange={handleAvailabilityCheck}
+            data={
+              cars?.map((item) => ({ label: item.name, value: item.id })) ?? []
+            }
+            onChange={(e) => fetchCarAvailability({ id: e.target.value })}
           />
         </Container>
         <Container
@@ -102,15 +105,19 @@ export default function DashboardPage() {
           className="col-span-12 md:col-span-6 xl:col-span-4"
           title="Recent Users"
         >
-          {users.map((user, index) => (
+          {users?.map((user, index) => (
             <div key={index} className="mt-4 flex gap-3">
               <div className="h-fit rounded-full bg-slate-100">
-                <Avatar src={user.profile} fallback={user.name} size="sm" />
+                <Avatar
+                  // src={user?.profile}
+                  fallback={user.fullname}
+                  size="sm"
+                />
               </div>
               <div>
-                <div className="">{user.name}</div>
+                <div className="">{user.fullname}</div>
                 <div className="text-sm text-black/50">
-                  {format(user.createdAt, "dd MMM yyyy")}
+                  {format(user.createdAt?.toString() ?? "", "dd MMM yyyy")}
                 </div>
               </div>
             </div>
@@ -140,4 +147,16 @@ const Container = (props: ContainerType) => {
       {props.children}
     </div>
   );
+};
+
+const addIconsToStats = (
+  stats: { type: string; name: string; count: number }[],
+) => {
+  return stats.map((item) => {
+    let icon;
+    if (item.type === "car") icon = Car;
+    if (item.type === "booking") icon = NotebookPen;
+    if (item.type === "users") icon = UserRound;
+    return { ...item, icon };
+  });
 };

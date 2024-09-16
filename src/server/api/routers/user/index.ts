@@ -5,10 +5,12 @@ import {
     createTRPCRouter,
     errorHandlingMiddleware,
     protectedProcedure,
-    publicProcedure
+    publicProcedure,
+    roleMiddleware
 } from "~/server/api/trpc";
 import { loginSchema, profileUpdateSchema, signupSchema } from "./schema";
 import { uploadFiles } from "~/utils/uploadFile";
+import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
     signup: publicProcedure
@@ -34,21 +36,17 @@ export const userRouter = createTRPCRouter({
             // Hash the password before saving to the database
             const hashedPassword = await bcrypt.hash(rest.password, 10);
             const user = await ctx.db.user.create({
-                data: {
-                    ...input,
-                    password: hashedPassword
-                }
+                data: { ...input, password: hashedPassword }
             })
             const token = generateToken(user.id, user.role);
 
             return { token, user }
         }),
+
     login: publicProcedure
         .use(errorHandlingMiddleware)
         .input(loginSchema)
         .mutation(async ({ ctx, input }) => {
-            console.log(ctx.session);
-
             const { email, password } = input;
 
             // Find the user by email
@@ -75,12 +73,23 @@ export const userRouter = createTRPCRouter({
 
             return { token, user };
         }),
+
     me: protectedProcedure.query((ops) => {
         return ops.ctx.db.user.findUnique({ where: { id: ops.ctx.session.id } })
     }),
+
+    get: protectedProcedure
+        .use(errorHandlingMiddleware)
+        .use(roleMiddleware(["CLIENT"]))
+        .input(z.object({ id: z.string() }))
+        .query(({ ctx, input }) => {
+            return ctx.db.user.findUnique({ where: { id: input.id } })
+        }),
+
     updateProfile: protectedProcedure.input(profileUpdateSchema).mutation(async ({ ctx, input }) => {
-        return ctx.db.user.update({ where: { id: ctx.session.id }, data: input })
+        return ctx.db.user.update({ where: { id: ctx.session.id }, data: { ...input } })
     }),
+
     getAllUsers: publicProcedure.query((ops) => {
         return ops.ctx.db.user.findMany({ skip: 0, take: 10 })
     })

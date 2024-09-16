@@ -17,6 +17,8 @@ import UserNav from "../common/navigation/userNav";
 export default function Navbar() {
   const user = useGlobalStore((state) => state.state.user);
 
+  console.log(user);
+
   const menuItems = [
     {
       label: "Home",

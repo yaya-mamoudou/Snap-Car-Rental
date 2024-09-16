@@ -50,15 +50,14 @@ export default function RegisterForm() {
 
       mutate(data, {
         onSuccess: async (data) => {
-          await saveUserInfo(JSON.stringify(data));
-          const res = await refetch();
-          setUser(res.data as ProfileType);
+          setUser(data.user as ProfileType);
+          utils.users.me.invalidate();
+          await saveUserInfo(JSON.stringify(data.token));
           toast.success("You have successfully created your account.✅");
           router.replace(redirect ?? "/dashboard");
         },
         onError(error, variables) {
           toast.error(`${error.message}❌`, {});
-          console.log(error.message, variables);
         },
       });
     },

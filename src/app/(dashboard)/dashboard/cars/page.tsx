@@ -1,4 +1,4 @@
-import CarsList from "~/components/pages/cars";
+import CarsList from "~/components/pages/dashboard-cars";
 
 export default async function CarsPage() {
   return (
