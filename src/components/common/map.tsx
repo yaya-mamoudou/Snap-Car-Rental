@@ -2,7 +2,8 @@
 import {
   DirectionsRenderer,
   GoogleMap,
-  useJsApiLoader
+  Marker,
+  useJsApiLoader,
 } from "@react-google-maps/api";
 import React, { useEffect } from "react";
 
@@ -31,8 +32,8 @@ const Map = ({ pickup, dropOff }: Props) => {
   });
 
   const center = {
-    lat: (pickup.lat + dropOff.lat) / 2,
-    lng: (pickup.lng + dropOff.lng) / 2,
+    lat: pickup.lat,
+    lng: pickup.lng,
   };
 
   useEffect(() => {
@@ -53,18 +54,21 @@ const Map = ({ pickup, dropOff }: Props) => {
             console.error(`error fetching directions ${result}`);
           }
         },
-      )
+      );
     }
   }, [isLoaded, dropOff, pickup]);
 
   const [map, setMap] = React.useState(null);
-  const onLoad = React.useCallback(function callback(map: any) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    /* eslint-disable  @typescript-eslint/no-unsafe-argument */
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-    setMap(map);
-  }, [center]);
+  const onLoad = React.useCallback(
+    function callback(map: any) {
+      // This is just an example of getting and using the map instance!!! don't just blindly copy!
+      /* eslint-disable  @typescript-eslint/no-unsafe-argument */
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
+      setMap(map);
+    },
+    [center],
+  );
 
   const onUnmount = React.useCallback(function callback() {
     setMap(null);
@@ -74,12 +78,12 @@ const Map = ({ pickup, dropOff }: Props) => {
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={5}
-      onLoad={onLoad}
+      zoom={17}
+      // onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      <DirectionsRenderer directions={directionsResponse!} />
-      {/* <Marker position={pickup} label={"Pickup"} /> */}
+      {/* <DirectionsRenderer directions={directionsResponse!} /> */}
+      <Marker position={pickup} />
       {/* <Marker position={dropOff}  /> */}
     </GoogleMap>
   ) : (

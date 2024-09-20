@@ -1,4 +1,5 @@
 import { ArrowLeftRight, Car, Grid2X2, NotebookPen, UserRound, Users } from "lucide-react";
+import { z } from "zod";
 import { BookingStatus } from "~/types";
 
 export const car = (index: number) => (
@@ -36,6 +37,10 @@ export const sidebarMenu = [
         path: '/dashboard/users',
         icon: Users,
     }
+]
+
+export const locations = [
+    { label: '13802 Castle Blvd, Silver Spring, MD 20904', value: '39.08429011596282,-76.94432984573987' }
 ]
 
 export const stats = [
@@ -164,3 +169,9 @@ export const wheel = [
     { label: "Automatic", value: "automatic" },
     { label: "Manual", value: "manual" },
 ];
+
+export const paginationSchema = z.object({
+    per_page: z.number(),
+    page: z.number(),
+    sort: z.enum(['desc', 'asc'])
+})

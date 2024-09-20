@@ -17,7 +17,7 @@ export default function GetUser() {
   });
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     data && setUser(data as ProfileType);
   }, [data]);
 

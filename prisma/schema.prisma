@@ -77,6 +77,17 @@ model Car {
     updatedAt     DateTime        @updatedAt
 }
 
+model Locations {
+    id              String    @id @default(auto()) @map("_id") @db.ObjectId
+    name            String
+    lng             Float
+    lat             Float
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    pickupBookings  Booking[] @relation("PickupLocation") // Relation back-reference
+    dropoffBookings Booking[] @relation("DropoffLocation") // Relation back-reference
+}
+
 model CarCategory {
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
     name      String
@@ -86,15 +97,21 @@ model CarCategory {
 }
 
 model Booking {
-    id         String        @id @default(auto()) @map("_id") @db.ObjectId
-    start_date DateTime
-    end_date   DateTime
-    status     BookingStatus
-    amount     Int
-    userId     String        @db.ObjectId
-    user       User          @relation(references: [id], fields: [userId])
-    carId      String        @db.ObjectId
-    car        Car           @relation(references: [id], fields: [carId])
-    createdAt  DateTime      @default(now())
-    updatedAt  DateTime      @updatedAt
+    id                  String        @id @default(auto()) @map("_id") @db.ObjectId
+    start_date          DateTime
+    end_date            DateTime
+    status              BookingStatus
+    ref                 String        @unique
+    pickup_location_id  String        @db.ObjectId
+    dropoff_location_id String        @db.ObjectId
+    pickup_location     Locations     @relation("PickupLocation", references: [id], fields: [pickup_location_id])
+    dropoff_location    Locations     @relation("DropoffLocation", references: [id], fields: [dropoff_location_id])
+    amount              Int
+    userId              String        @db.ObjectId
+    user                User          @relation(references: [id], fields: [userId])
+    carId               String        @db.ObjectId
+    car                 Car           @relation(references: [id], fields: [carId])
+    createdAt           DateTime      @default(now())
+    updatedAt           DateTime      @updatedAt
+    locationsId         String?       @db.ObjectId
 }

@@ -1,13 +1,23 @@
-import { cn, Divider } from "@nextui-org/react";
+"use client";
+import { cn, Divider, Spinner } from "@nextui-org/react";
+import { BookingStatus } from "@prisma/client";
 import { format } from "date-fns";
 import { BookCheck, Search } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import Input from "~/components/common/input";
-import { bookings } from "~/data/mock";
-import { BookingStatus } from "~/types";
+import { api } from "~/trpc/react";
 
 export default function BookingPage() {
+  const { data, isPending, error } = api.booking.getAll.useQuery({
+    per_page: 2,
+  });
+
+  useEffect(() => {
+    error?.message && toast.error(error?.message!);
+  }, [error?.message]);
+
   return (
     <div>
       <h1 className="mt-10 text-2xl font-bold text-black">Booking</h1>
@@ -23,10 +33,15 @@ export default function BookingPage() {
           </div>
           <Divider className="mb-3 mt-3 bg-gray-200" />
         </div>
+        {isPending && (
+          <div className="flex w-full items-center justify-center gap-x-2">
+            <Spinner size="sm" /> Loading Cars
+          </div>
+        )}
         <div className="odd:*:bg-gray-50">
-          {bookings.map((booking) => (
+          {data?.data.map((booking) => (
             <div
-              key={booking.car}
+              key={booking.id}
               className="mt-4 flex gap-3 px-4 py-3 hover:bg-gray-100"
             >
               <div className="flex size-[40px] items-center justify-center rounded-full bg-gray-300 p-2 text-white">
@@ -34,15 +49,15 @@ export default function BookingPage() {
               </div>
               <div className="w-full">
                 <Link
-                  href={`/dashboard/booking/${booking.car}`}
+                  href={`/dashboard/booking/${booking.id}`}
                   className="w-full hover:underline"
                 >
-                  {booking.car} -{" "}
-                  <span className="font-medium">({booking.user})</span>
+                  {booking.car.name} -{" "}
+                  <span className="font-medium">({booking.user.fullname})</span>
                 </Link>
                 <div className="text-sm text-black/50">
-                  {format(booking.startDate, "dd MMM yyyy")} -{" "}
-                  {format(booking.endDate, "dd MMM yyyy")}
+                  {format(booking.start_date, "dd MMM yyyy")} -{" "}
+                  {format(booking.end_date, "dd MMM yyyy")}
                 </div>
                 <div
                   className={cn(

@@ -4,7 +4,12 @@ import Image from "next/image";
 import Button from "~/components/common/button";
 import ReservationSteps from "~/components/ui/reservation-steps";
 
-export default function Page() {
+type Props = {
+  params: { "car-slug": string };
+  searchParams: { ref: string };
+};
+
+export default function Page({ ...props }: Props) {
   return (
     <div className="flex min-h-[inherit] flex-col">
       <ReservationSteps step={4} />
@@ -44,7 +49,7 @@ export default function Page() {
 
                     <Input
                       disabled
-                      value="129384920394930"
+                      value={props.searchParams.ref}
                       className="mt-10"
                       variant="bordered"
                       classNames={{

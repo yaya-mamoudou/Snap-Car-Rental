@@ -13,12 +13,11 @@ import Button from "../common/button";
 import SnapCarLogoIcon from "../icons/snap-car-logo";
 import { useGlobalStore } from "~/store/globalStore";
 import UserNav from "../common/navigation/userNav";
+import { api } from "~/trpc/react";
 
 export default function Navbar() {
   const user = useGlobalStore((state) => state.state.user);
-
-  console.log(user);
-
+  const { mutate } = api.location.create.useMutation();
   const menuItems = [
     {
       label: "Home",
@@ -42,6 +41,21 @@ export default function Navbar() {
     // "Good Deals",
     // "Contact Us",
   ];
+
+  // const addLocation = () => {
+  //   mutate(
+  //     {
+  //       name: "13802 Castle Blvd, Silver Spring, MD 20904",
+  //       lat: Number("39.08429011596282"),
+  //       lng: Number("-76.94432984573987"),
+  //     },
+  //     {
+  //       onSettled(data, error, variables, context) {
+  //         console.log(data, error);
+  //       },
+  //     },
+  //   );
+  // };
 
   return (
     <Nav className="*:container" disableAnimation>

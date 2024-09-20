@@ -3,6 +3,7 @@ import Image from "next/image";
 import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";
+import { locations } from "~/data/mock";
 export default function Hero() {
   return (
     <div className="md:container">
@@ -41,7 +42,8 @@ export default function Hero() {
               placeholder="Select location"
               labelPlacement="inside"
               label="Pick-up Location"
-              data={[{ label: "Yaya", value: "yaya" }]}
+              data={locations}
+              selectedKeys={[locations[0]?.value!]}
             />
           </div>
 

@@ -7,10 +7,9 @@ import { api } from "~/trpc/react";
 export default function CarList() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isPending } = api.cars.getAll.useQuery({
-    per_page: 1,
+    per_page: 8,
     page: currentPage,
   });
-  console.log(data?.meta);
 
   return (
     <div className="flex-1 bg-black/5 py-20">
@@ -37,7 +36,8 @@ export default function CarList() {
           className="mt-20 p-0 drop-shadow-2xl"
           isCompact
           showControls
-          total={data?.meta.total_pages ?? 0}
+          initialPage={1}
+          total={data?.meta.total_pages ?? 1}
           page={data?.meta.current_page}
         />
       </div>

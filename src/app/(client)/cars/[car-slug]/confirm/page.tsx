@@ -1,15 +1,55 @@
+"use client";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import CarCard from "~/components/common/car-card";
 import Map from "~/components/common/map";
-import { cars } from "~/data/mock";
 import ReservationSteps from "~/components/ui/reservation-steps";
-const car = cars(1)[0];
+import { currencyFormatter, getBookingPrices } from "~/helpers";
+import { useGlobalStore } from "~/store/globalStore";
+import { api } from "~/trpc/react";
 
-const pickupLocation = { lat: 34.1184, lng: -118.3004 }; // Griffith Observatory
 const dropoffLocation = { lat: 34.01, lng: -118.4963 };
 
 export default function Page() {
+  const params = useParams();
+  const carSlug = params["car-slug"];
+  const { data: car } = api.cars.getById.useQuery({ id: carSlug as string });
+  const router = useRouter();
+  const { mutate, isPending } = api.booking.create.useMutation();
+  const { start_date, end_date, dropoff_location_id, pickup_location_id } =
+    useGlobalStore((state) => state.state.activeBookingDetails);
+
+  const props = getBookingPrices({
+    start_date,
+    end_date,
+    monthly_price: car?.monthly_price!,
+    daily_price: car?.daily_price,
+  });
+
+  const handleSubmit = async () => {
+    mutate(
+      {
+        start_date: start_date!,
+        end_date: end_date!,
+        amount: props.total_price,
+        carId: carSlug as string,
+        dropoff_location_id: dropoff_location_id!,
+        pickup_location_id: pickup_location_id!,
+      },
+      {
+        onSuccess(data) {
+          toast.success("Car booked successfully!!!");
+          router.push(`./success?ref=${data.ref}`);
+        },
+        onError(error, variables, context) {
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
   return (
     <div className="flex min-h-[inherit] flex-col">
       <ReservationSteps step={3} />
@@ -17,7 +57,7 @@ export default function Page() {
         <div className="container">
           <h1 className="mb-10 text-2xl font-semibold">Confirm Booking</h1>
 
-          <div className="grid grid-cols-12 md:gap-x-10 gap-y-10">
+          <div className="grid grid-cols-12 gap-y-10 md:gap-x-10">
             <div className="col-span-12 md:col-span-8">
               <CarCard horizontal {...car} />
             </div>
@@ -27,7 +67,36 @@ export default function Page() {
                   Pricing Details
                 </h2>
                 <div>
-                  {data.map((item) => (
+                  <div className="flex justify-between px-4 py-2 text-sm odd:bg-gray-100 lg:px-10">
+                    <span className="text-black/40">Rental Fee/Day</span>
+                    <span className="font-semibold">
+                      {currencyFormatter.format(Number(car?.daily_price))}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between px-4 py-2 text-sm odd:bg-gray-100 lg:px-10">
+                    <span className="text-black/40">Number of Days</span>
+                    <span className="font-semibold">{props.numberOfDays}</span>
+                  </div>
+
+                  <div className="flex justify-between px-4 py-2 text-sm odd:bg-gray-100 lg:px-10">
+                    <span className="text-black/40">Insurance</span>
+                    <span className="font-semibold"></span>
+                  </div>
+                  <div className="flex justify-between px-4 py-2 text-sm odd:bg-gray-100 lg:px-10">
+                    <span className="text-black/40">Tax</span>
+                    <span className="font-semibold">
+                      {currencyFormatter.format(props.tax)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between px-4 py-2 text-sm odd:bg-gray-100 lg:px-10">
+                    <span className="text-black/40">Total Cost</span>
+                    <span className="font-semibold">
+                      {currencyFormatter.format(props.total_price)}
+                    </span>
+                  </div>
+
+                  {/* {data.map((item) => (
                     <div
                       className="flex justify-between px-4 py-2 text-sm odd:bg-gray-100 lg:px-10"
                       key={item.label}
@@ -35,7 +104,7 @@ export default function Page() {
                       <span className="text-black/40">{item.label}</span>
                       <span className="font-semibold">{item.amount}</span>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               </div>
             </div>
@@ -58,12 +127,20 @@ export default function Page() {
             ))}
           </div>
 
-          <Button link href="./success" className="mt-10 w-full">
+          <Button
+            onClick={handleSubmit}
+            isLoading={isPending}
+            isDisabled={car?.availability !== "AVAILABLE"}
+            className="mt-10 w-full"
+          >
             Confirm
           </Button>
 
           <div className="mt-20">
-            <Map dropOff={dropoffLocation} pickup={pickupLocation} />
+            <Map
+              dropOff={dropoffLocation}
+              pickup={{ lat: 39.08428595199796, lng: -76.94431911690377 }}
+            />
           </div>
         </div>
       </div>

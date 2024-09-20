@@ -47,6 +47,15 @@ export type ProfileType = z.infer<typeof signupSchema> & {
     role: Roles
 }
 
+export type ActiveBookingType = {
+    carId: string;
+    start_date: string
+    end_date: string
+    number_of_days: number,
+    dropoff_location_id: string,
+    pickup_location_id: string
+}
+
 export const createCarFormSchema = yup.object({
     name: yup.string().required(),
     availability: yup.string().oneOf(['BOOKED', 'AVAILABLE', 'UNAVAILABLE']).required(),
@@ -65,3 +74,5 @@ export const createCarFormSchema = yup.object({
     MPG: yup.string().optional(),
     features: yup.string().optional(),
 })
+
+export type DropdownItemType = { label: string, value: string }

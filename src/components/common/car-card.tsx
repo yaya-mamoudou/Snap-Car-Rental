@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "./button";
 import { createCarSchema } from "~/server/api/routers/car/schema";
 import { z } from "zod";
+import { currencyFormatter } from "~/helpers";
 
 type Props = Partial<z.infer<typeof createCarSchema>> & {
   horizontal?: boolean;
@@ -49,13 +50,16 @@ const CarCard = (props: Props) => {
         <div className="mt-2 text-tiny font-semibold text-gray-500">
           <div>
             <span>
-              {props?.daily_price}/<span className="text-[0.6rem]">Day</span>
+              {currencyFormatter.format(Number(props.daily_price))}/
+              <span className="text-[0.6rem]">Day</span>
             </span>
             <span className="mx-2">|</span>
-            <span>
-              {props?.monthly_price}/{" "}
-              <span className="text-[0.6rem]">Month</span>
-            </span>
+            {props.monthly_price && (
+              <span>
+                {currencyFormatter.format(Number(props?.monthly_price))}/
+                <span className="text-[0.6rem]">Month</span>
+              </span>
+            )}
           </div>
           <div className="mt-2">{props?.engine} Engine</div>
           <div className="mt-2 flex gap-4 *:flex *:items-center *:gap-2">

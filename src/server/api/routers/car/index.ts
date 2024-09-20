@@ -1,3 +1,6 @@
+import { omit } from "lodash";
+import { z } from "zod";
+import { paginationSchema } from "~/data/mock";
 import {
     createTRPCRouter,
     errorHandlingMiddleware,
@@ -6,14 +9,6 @@ import {
     roleMiddleware
 } from "~/server/api/trpc";
 import { createCarSchema, updateCarSchema } from "./schema";
-import { z } from "zod";
-import { omit } from "lodash";
-
-const paginationSchema = z.object({
-    per_page: z.number(),
-    page: z.number(),
-    sort: z.enum(['desc', 'asc'])
-})
 
 export const carRouter = createTRPCRouter({
     create: protectedProcedure
@@ -60,7 +55,7 @@ export const carRouter = createTRPCRouter({
     getById: publicProcedure.use(errorHandlingMiddleware).input(z.object({
         id: z.string()
     })).query(({ ctx, input }) => {
-        return ctx.db.car.findUnique({ where: { id: input.id } })
+        return ctx.db.car.findUnique({ where: { id: input.id }, include: { category: true } })
     }),
     deleteCar: protectedProcedure
         .use(roleMiddleware(['ADMIN']))
