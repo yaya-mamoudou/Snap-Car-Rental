@@ -2,15 +2,17 @@
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
+import { loginFormSchema } from "~/schemas";
 import { saveUserInfo } from "~/server-actions/auth";
 import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
-import { loginFormSchema, ProfileType } from "~/types";
+import type { ProfileType } from "~/types";
 
-export default function LoginForm() {
+function Form() {
   const query = useSearchParams();
   const redirect = query.get("redirect");
   const setUser = useGlobalStore((state) => state.setUser);
@@ -86,5 +88,13 @@ export default function LoginForm() {
         </Link>
       </div>
     </form>
+  );
+}
+
+export default function LoginForm() {
+  return (
+    <Suspense>
+      <Form />
+    </Suspense>
   );
 }

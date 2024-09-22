@@ -5,22 +5,23 @@ import { useFormik } from "formik";
 import { omit } from "lodash";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Upload from "~/components/common/upload";
+import { signupFormSchema } from "~/schemas";
 import { saveUserInfo } from "~/server-actions/auth";
 import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
-import { ProfileType, signupFormSchema } from "~/types";
+import type { ProfileType } from "~/types";
 import { convertFileToBase64 } from "~/utils/convert-file-to-base64";
 
-export default function RegisterForm() {
+function Form() {
   const { mutate, isPending } = api.users.signup.useMutation();
   const utils = api.useUtils();
   const query = useSearchParams();
   const redirect = query.get("redirect");
-  const { refetch } = api.users.me.useQuery(undefined, { enabled: false });
   const setUser = useGlobalStore((state) => state.setUser);
 
   const router = useRouter();
@@ -196,9 +197,8 @@ export default function RegisterForm() {
             required
             label="Upload Driver's Lisence"
             errorMessage={
-              (formik.touched.drivers_lisence &&
-                formik.errors.drivers_lisence) ??
-              ""
+              ((formik.touched.drivers_lisence &&
+                formik.errors.drivers_lisence) as string) ?? ""
             }
             onChange={(e) => handleFileChange(e, "drivers_lisence")}
           />
@@ -207,7 +207,8 @@ export default function RegisterForm() {
         <div className="col-span-12 md:col-span-6">
           <Upload
             errorMessage={
-              (formik.touched.insurance && formik.errors.insurance) ?? ""
+              ((formik.touched.insurance &&
+                formik.errors.insurance) as string) ?? ""
             }
             onChange={(e) => handleFileChange(e, "insurance")}
             accept="image/*,.pdf"
@@ -235,5 +236,13 @@ export default function RegisterForm() {
         </Link>
       </div>
     </form>
+  );
+}
+
+export default function RegisterForm() {
+  return (
+    <Suspense>
+      <Form />
+    </Suspense>
   );
 }

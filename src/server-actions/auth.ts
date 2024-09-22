@@ -1,12 +1,13 @@
 'use server'
-import { ProfileType } from "~/types";
-import { deleteCookie, getCookie, setCookie } from ".";
-import { cookies } from "next/headers";
+import { setCookie } from ".";
 
-export const saveUserInfo = async (data: string, hasToken = true) => {
-    await setCookie("user", data, {
+export const saveUserInfo = async (data: string) => {
+    return setCookie("user", data, {
         httpOnly: true,
         path: "/"
     });
-    return data
+}
+
+export const logout = () => {
+    return setCookie('user', '', { httpOnly: true, path: '/', expires: Date.now() })
 }

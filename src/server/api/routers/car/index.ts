@@ -19,11 +19,14 @@ export const carRouter = createTRPCRouter({
             return ctx.db.car.create({ data: input })
         }),
     update: protectedProcedure
-        .use(roleMiddleware(["ADMIN"]))
+        .use(roleMiddleware(["ADMIN", 'CLIENT']))
         .use(errorHandlingMiddleware)
         .input(updateCarSchema)
         .mutation(async ({ ctx, input }) => {
             const car = await ctx.db.car.update({ where: { id: input.carId }, data: omit(input, ['carId']) })
+            if (input.availability === 'AVAILABLE') {
+                await ctx.db.booking.updateMany({ where: { carId: input.carId }, data: { status: 'EXPIRED' } })
+            }
             return car
         }),
     getCategories: publicProcedure.use(errorHandlingMiddleware).query(({ ctx }) => {
@@ -39,12 +42,10 @@ export const carRouter = createTRPCRouter({
         .input(paginationSchema.partial())
         .query(async ({ ctx, input }) => {
             const { sort = 'asc', per_page = 8, page = 1 } = input
-
-            const list = ctx.db.car.findMany({ skip: per_page * (page - 1), take: per_page, orderBy: { createdAt: sort } })
+            const shouldBeAvailable = input.filter === 'available'
+            const list = ctx.db.car.findMany({ where: { ...shouldBeAvailable && { availability: 'AVAILABLE' } }, skip: per_page * (page - 1), take: per_page, orderBy: { createdAt: sort } })
             const count = ctx.db.car.count()
-
             const res = await Promise.all([list, count])
-
             const totalPages = Math.ceil(res[1] / per_page)
 
             return {

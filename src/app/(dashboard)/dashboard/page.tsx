@@ -1,13 +1,12 @@
 "use client";
-import { Avatar, cn, Divider, Spinner } from "@nextui-org/react";
+import { Avatar, Divider, Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
-import { BookCheck, Car, NotebookPen, UserRound } from "lucide-react";
+import { Car, NotebookPen, UserRound } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import BookingCard from "~/components/common/booking-card";
 import Select from "~/components/common/select";
-import { bookings } from "~/data/mock";
 import { api } from "~/trpc/react";
-import { BookingStatus } from "~/types";
 
 type ContainerType = {
   title: string;
@@ -17,16 +16,14 @@ type ContainerType = {
 };
 
 export default function DashboardPage() {
-  const { data: cars } = api.cars.getAll.useQuery();
+  const { data: cars } = api.cars.getAll.useQuery({});
+  const { data: bookings } = api.booking.getAll.useQuery({ per_page: 8 });
   const { data: statsData } = api.global.getStats.useQuery();
   const stats = addIconsToStats(statsData ?? []);
   const { data: users } = api.users.getAllUsers.useQuery();
 
-  const {
-    mutate: fetchCarAvailability,
-    data,
-    isPending: isFetchingAvailability,
-  } = api.cars.getCarAvailability.useMutation();
+  const { mutate: fetchCarAvailability, isPending: isFetchingAvailability } =
+    api.cars.getCarAvailability.useMutation();
 
   return (
     <div>
@@ -59,7 +56,10 @@ export default function DashboardPage() {
             labelPlacement="inside"
             className="mt-4 max-w-[400px]"
             data={
-              cars?.map((item) => ({ label: item.name, value: item.id })) ?? []
+              cars?.data.map((item) => ({
+                label: item.name,
+                value: item.id,
+              })) ?? []
             }
             onChange={(e) => fetchCarAvailability({ id: e.target.value })}
           />
@@ -69,35 +69,16 @@ export default function DashboardPage() {
           className="col-span-12 md:col-span-6 xl:col-span-8"
           title="Recent Bookings"
         >
-          {bookings.map((booking, index) => (
-            <div key={index} className="mt-4 flex gap-3">
-              <div className="flex size-[40px] items-center justify-center rounded-full bg-gray-300 p-2 text-white">
-                <BookCheck size={20} strokeWidth={2} />
-              </div>
-              <div className="w-full">
-                <div className="w-full">
-                  {booking.car} -{" "}
-                  <span className="font-medium">({booking.user})</span>
-                </div>
-                <div className="text-sm text-black/50">
-                  {format(booking.startDate, "dd MMM yyyy")} -{" "}
-                  {format(booking.endDate, "dd MMM yyyy")}
-                </div>
-                <div
-                  className={cn(
-                    [
-                      BookingStatus.PAID,
-                      BookingStatus.PAID_AND_ONGOING,
-                    ].includes(booking.status) && "text-sm text-green-400",
-                    booking.status === BookingStatus.PENDIND_PAYMENT &&
-                      "text-yellow-400",
-                    booking.status === BookingStatus.EXPIRED && "text-red-500",
-                  )}
-                >
-                  Status: {booking.status}
-                </div>
-              </div>
-            </div>
+          {bookings?.data?.map((booking) => (
+            <BookingCard
+              key={booking.id}
+              end_date={booking.end_date.toString()}
+              start_date={booking.start_date.toString()}
+              status={booking.status}
+              id={booking.id}
+              user={{ fullname: booking.user.fullname! }}
+              car={booking.car}
+            />
           ))}
         </Container>
         <Container

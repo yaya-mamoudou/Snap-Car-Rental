@@ -24,7 +24,7 @@ export default function Page() {
   const props = getBookingPrices({
     start_date,
     end_date,
-    monthly_price: car?.monthly_price!,
+    monthly_price: car?.monthly_price ?? "",
     daily_price: car?.daily_price,
   });
 
@@ -43,7 +43,7 @@ export default function Page() {
           toast.success("Car booked successfully!!!");
           router.push(`./success?ref=${data.ref}`);
         },
-        onError(error, variables, context) {
+        onError(error) {
           toast.error(error.message);
         },
       },
@@ -59,7 +59,20 @@ export default function Page() {
 
           <div className="grid grid-cols-12 gap-y-10 md:gap-x-10">
             <div className="col-span-12 md:col-span-8">
-              <CarCard horizontal {...car} />
+              {car && (
+                <CarCard
+                  horizontal
+                  id={car.id}
+                  daily_price={car.daily_price}
+                  monthly_price={car.monthly_price ?? ""}
+                  transmission={car.transmission}
+                  name={car.name}
+                  availability={car.availability}
+                  luggages={car.luggages}
+                  engine={car.engine}
+                  seats={car.seats}
+                />
+              )}
             </div>
             <div className="col-span-12 md:col-span-4">
               <div className="rounded-xl bg-white py-4">
@@ -147,13 +160,6 @@ export default function Page() {
     </div>
   );
 }
-
-const data = [
-  { label: "Rental Fee/Day", amount: "$12" },
-  { label: "Insurance", amount: "$12" },
-  { label: "Tax", amount: "$6" },
-  { label: "Total Cost", amount: "$28" },
-];
 
 const paymentData = [
   "/images/payment/Cash App.webp",

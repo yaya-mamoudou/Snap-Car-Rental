@@ -1,14 +1,14 @@
 "use client";
 import { Divider, Spinner } from "@nextui-org/react";
-import { Eye, Pen, Plus, Search, Trash } from "lucide-react";
+import { Plus, Search, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
-import CreateCarDialog from "./create-car-dialog";
 import { api } from "~/trpc/react";
-import toast from "react-hot-toast";
+import CreateCarDialog from "./create-car-dialog";
 
 export default function CarsList() {
   const { data: cars, isPending } = api.cars.getAll.useQuery({});
@@ -22,9 +22,9 @@ export default function CarsList() {
     deleteCar(
       { id },
       {
-        onSuccess: (res) => {
-          utils.cars.getAll.invalidate();
+        onSuccess: async () => {
           toast.success("Car has been deleted");
+          await utils.cars.getAll.invalidate();
         },
         onError: (err) => {
           toast.error(err.message);

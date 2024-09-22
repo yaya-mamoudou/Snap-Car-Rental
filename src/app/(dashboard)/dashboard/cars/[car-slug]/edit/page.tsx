@@ -1,24 +1,23 @@
 "use client";
 import { Textarea } from "@nextui-org/react";
-import { CarAvailability } from "@prisma/client";
+import type { CarAvailability } from "@prisma/client";
 import { useFormik } from "formik";
 import { omit } from "lodash";
 import { DollarSign } from "lucide-react";
 import { useParams } from "next/navigation";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Select from "~/components/common/select";
-import { engines, status, wheel } from "~/data/mock";
-import { getCookie } from "~/server-actions";
+import { status } from "~/data/mock";
+import { createCarFormSchema } from "~/schemas";
 import { api } from "~/trpc/react";
-import { createCarFormSchema } from "~/types";
 
-export default function page() {
+export default function DashboardCarsPage() {
   const params: Record<"car-slug", string> = useParams();
   const carSlug = params["car-slug"];
-  const { data: car, isFetching } = api.cars.getById.useQuery({ id: carSlug });
+  const { data: car } = api.cars.getById.useQuery({ id: carSlug });
   const { data: categories } = api.cars.getCategories.useQuery();
   const utils = api.useUtils();
   const { mutate, isPending } = api.cars.update.useMutation();
@@ -47,10 +46,11 @@ export default function page() {
       mutate(
         { carId: carSlug, ...formData },
         {
-          onSuccess: (res) => {
+          onSuccess: () => {
             toast.success("Your car has been Edited!!");
             formik.resetForm();
             utils.cars.getById.invalidate({ id: carSlug });
+            utils.booking.getAll.invalidate();
           },
           onError: (error) => {
             toast.error(error.message);
@@ -62,7 +62,7 @@ export default function page() {
 
   useEffect(() => {
     if (car) {
-      formik.setValues(omit(car, ["id"]) as any);
+      formik.setValues(omit(car, ["id"]) as typeof formik.values);
     }
   }, [car]);
 

@@ -2,7 +2,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { authRouter } from "~/helpers";
-import { saveUserInfo } from "~/server-actions/auth";
 import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
 import { ProfileType } from "~/types";
@@ -12,12 +11,11 @@ export default function GetUser() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { error, data, isLoading } = api.users.me.useQuery(undefined, {
+  const { error, data } = api.users.me.useQuery(undefined, {
     retry: 0,
   });
 
   useEffect(() => {
-    // console.log(data);
     data && setUser(data as ProfileType);
   }, [data]);
 

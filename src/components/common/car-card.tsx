@@ -1,15 +1,23 @@
 import { cn } from "@nextui-org/react";
 import { Carousel } from "flowbite-react";
 import { BriefcaseBusiness, Settings2, User } from "lucide-react";
-import Image from "next/image";
-import Button from "./button";
-import { createCarSchema } from "~/server/api/routers/car/schema";
 import { z } from "zod";
 import { currencyFormatter } from "~/helpers";
+import { createCarSchema } from "~/server/api/routers/car/schema";
+import Button from "./button";
 
 type Props = Partial<z.infer<typeof createCarSchema>> & {
   horizontal?: boolean;
   id: string;
+  name: string;
+  availability: string;
+  daily_price: string;
+  monthly_price: string;
+  engine: string;
+  transmission: string;
+  seats: string;
+  luggages: string;
+  // images: string[];
 };
 const CarCard = (props: Props) => {
   return (
@@ -47,6 +55,9 @@ const CarCard = (props: Props) => {
       </div>
       <div className="mt-5 pl-2">
         <h2 className="text-lg font-semibold">{props?.name}</h2>
+        <div className="capitalize text-red-400 line-through">
+          {props.availability !== "AVAILABLE" && "Unavailable"}
+        </div>
         <div className="mt-2 text-tiny font-semibold text-gray-500">
           <div>
             <span>

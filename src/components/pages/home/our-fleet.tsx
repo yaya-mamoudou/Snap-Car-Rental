@@ -1,5 +1,4 @@
 import CarCard from "~/components/common/car-card";
-import { cars } from "../../../data/mock";
 import { api } from "~/trpc/server";
 
 export default async function OurFleet() {
@@ -12,7 +11,17 @@ export default async function OurFleet() {
         <div className="mt-10 grid w-full grid-cols-12 gap-x-0 gap-y-10 sm:gap-x-10 lg:w-3/4">
           {cars?.data.map((item, key) => (
             <div key={key} className="col-span-12 sm:col-span-6 2xl:col-span-4">
-              <CarCard {...item} />
+              <CarCard
+                id={item.id}
+                daily_price={item.daily_price}
+                monthly_price={item.monthly_price!}
+                transmission={item.transmission}
+                name={item.name}
+                availability={item.availability}
+                luggages={item.luggages}
+                engine={item.engine}
+                seats={item.seats}
+              />
             </div>
           ))}
         </div>

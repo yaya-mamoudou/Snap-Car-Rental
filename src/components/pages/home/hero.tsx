@@ -4,6 +4,7 @@ import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";
 import { locations } from "~/data/mock";
+
 export default function Hero() {
   return (
     <div className="md:container">
@@ -43,7 +44,8 @@ export default function Hero() {
               labelPlacement="inside"
               label="Pick-up Location"
               data={locations}
-              selectedKeys={[locations[0]?.value!]}
+              selectedKeys={[locations[0]?.value ?? ""]}
+              defaultSelectedKeys={[locations[0]?.value ?? ""]}
             />
           </div>
 

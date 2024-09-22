@@ -1,6 +1,5 @@
 "use client";
 import { parseDateTime } from "@internationalized/date";
-import { SelectItemProps } from "@nextui-org/react";
 import { add, differenceInDays, format } from "date-fns";
 import { Carousel } from "flowbite-react";
 import { useParams, useRouter } from "next/navigation";
@@ -9,20 +8,19 @@ import Button from "~/components/common/button";
 import DatePicker from "~/components/common/date-picker";
 import Select from "~/components/common/select";
 import ReservationSteps from "~/components/ui/reservation-steps";
+import { formatStr } from "~/data/mock";
 import { currencyFormatter } from "~/helpers";
 import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
-import { DropdownItemType } from "~/types";
-
-const formatStr = "yyyy-MM-dd'T'HH:mm:ss";
+import type { DropdownItemType } from "~/types";
 
 export default function Page() {
   const setBooking = useGlobalStore((state) => state.setActiveBooking);
   const router = useRouter();
   const params = useParams();
-  const carSlug = params["car-slug"];
-  const { data: car } = api.cars.getById.useQuery({ id: carSlug as string });
-  let { data } = api.location.getAll.useQuery();
+  const carSlug = params["car-slug"] as string;
+  const { data: car } = api.cars.getById.useQuery({ id: carSlug });
+  const { data } = api.location.getAll.useQuery();
   let locations: DropdownItemType[] = [];
 
   if (data) {
@@ -69,10 +67,10 @@ export default function Page() {
 
     setBooking({
       ...form,
-      carId: carSlug as string,
+      carId: carSlug,
       number_of_days: numberOfDays,
-      pickup_location_id: locations[0]?.value!,
-      dropoff_location_id: locations[0]?.value!,
+      pickup_location_id: locations[0]?.value ?? "",
+      dropoff_location_id: locations[0]?.value ?? "",
     });
 
     router.push(`/cars/${carSlug}/confirm`);
@@ -156,16 +154,16 @@ export default function Page() {
 
                   <Select
                     data={locations}
-                    defaultSelectedKeys={[locations[0]?.value!]}
-                    selectedKeys={[locations[0]?.value!]}
+                    defaultSelectedKeys={[locations[0]?.value ?? ""]}
+                    selectedKeys={[locations[0]?.value ?? ""]}
                     placeholder="Select location"
                     label="Pick-Up Location"
                     labelPlacement="outside"
                   />
                   <Select
                     data={locations}
-                    defaultSelectedKeys={[locations[0]?.value!]}
-                    selectedKeys={[locations[0]?.value!]}
+                    defaultSelectedKeys={[locations[0]?.value ?? ""]}
+                    selectedKeys={[locations[0]?.value ?? ""]}
                     placeholder="Select location"
                     label="Pick-Off Location"
                     labelPlacement="outside"
@@ -219,7 +217,7 @@ export default function Page() {
                   ></Item>
                   <Item label="Seats" value={car?.seats}></Item>
                   <Item label="Fuel" value={car?.fuel}></Item>
-                  {car?.MPG && <Item label="MPG" value={car?.MPG!}></Item>}
+                  {car?.MPG && <Item label="MPG" value={car?.MPG ?? ""}></Item>}
                   {car?.description && (
                     <Item label="Description" value={car?.description}></Item>
                   )}

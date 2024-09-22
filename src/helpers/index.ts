@@ -1,6 +1,6 @@
 import { differenceInDays } from 'date-fns';
 import jwt from 'jsonwebtoken';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 // Helper function to generate a token (valid for 1 year)
 export const generateToken = (userId: string, role: string) => {

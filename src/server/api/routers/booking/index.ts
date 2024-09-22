@@ -3,6 +3,7 @@ import { createTRPCRouter, errorHandlingMiddleware, protectedProcedure, roleMidd
 import { createBookingSchema } from "./schema"
 import { v4 as uuid } from 'uuid'
 import { paginationSchema } from "~/data/mock"
+import { z } from "zod"
 export const bookingRouter = createTRPCRouter({
     create: protectedProcedure
         .use(roleMiddleware(['CLIENT', 'ADMIN']))
@@ -41,5 +42,31 @@ export const bookingRouter = createTRPCRouter({
                 meta: { per_page: per_page, current_page: page, total_pages: totalPages },
                 data: res[0]
             }
-        })
+        }),
+    getById: protectedProcedure.use(errorHandlingMiddleware)
+        .input(z.object({ id: z.string() })).query(({ ctx, input }) => {
+            return ctx.db.booking.findUnique({ where: { id: input.id }, include: { car: true, user: true } })
+        }),
+    update: protectedProcedure.use(errorHandlingMiddleware)
+        .input(z.object({ start_date: z.string(), end_date: z.string(), car_id: z.string(), id: z.string(), status: z.nativeEnum(BookingStatus) }))
+        .mutation(async ({ ctx, input }) => {
+            const res = await ctx.db.booking.update(
+                {
+                    where: { id: input.id },
+                    data: {
+                        status: input.status,
+                        start_date: new Date(input.start_date),
+                        end_date: new Date(input.end_date)
+                    }
+                })
+
+            if (input.status === "PAID") {
+                await ctx.db.car.update({ where: { id: input.car_id }, data: { availability: CarAvailability.BOOKED } })
+            }
+            if (input.status === 'EXPIRED') {
+                await ctx.db.car.update({ where: { id: input.car_id }, data: { availability: CarAvailability.AVAILABLE } })
+            }
+
+            return res
+        }),
 })

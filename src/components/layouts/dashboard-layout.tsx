@@ -6,13 +6,11 @@ type DashboardLayoutProps = React.HTMLAttributes<HTMLDivElement> & {
   sideComponentClassName?: string;
   bodyClassName?: string;
   topComponent?: React.ReactNode;
-  topComponentClassName?: string;
 };
 
 export default function DashboardLayout({
   className,
   sideComponent,
-  topComponentClassName,
   topComponent,
   sideComponentClassName,
   bodyClassName,

@@ -9,15 +9,14 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
-import Button from "../common/button";
-import SnapCarLogoIcon from "../icons/snap-car-logo";
 import { useGlobalStore } from "~/store/globalStore";
+import Button from "../common/button";
 import UserNav from "../common/navigation/userNav";
-import { api } from "~/trpc/react";
+import SnapCarLogoIcon from "../icons/snap-car-logo";
 
 export default function Navbar() {
   const user = useGlobalStore((state) => state.state.user);
-  const { mutate } = api.location.create.useMutation();
+
   const menuItems = [
     {
       label: "Home",
@@ -109,12 +108,12 @@ export default function Navbar() {
       </NavbarContent>
 
       <NavbarContent className="lg:!grow-0" justify="end">
-        {user && (
+        {user?.email && (
           <NavbarItem>
             <UserNav user={user} />
           </NavbarItem>
         )}
-        {!user && (
+        {!user?.email && (
           <>
             <NavbarItem className="hidden lg:flex">
               <Link href="/register">Register</Link>

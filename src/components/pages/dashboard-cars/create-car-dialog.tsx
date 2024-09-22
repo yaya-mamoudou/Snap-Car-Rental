@@ -1,26 +1,23 @@
 "use client";
-import React, { cloneElement, isValidElement, ReactElement } from "react";
 import {
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
-  useDisclosure,
-  Checkbox,
-  Link,
-  Dropdown,
+  ModalHeader,
   Textarea,
+  useDisclosure,
 } from "@nextui-org/react";
+import { CarAvailability } from "@prisma/client";
+import { useFormik } from "formik";
+import React, { ReactElement } from "react";
+import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Select from "~/components/common/select";
-import { engines, status, wheel } from "~/data/mock";
+import { status } from "~/data/mock";
+import { createCarFormSchema } from "~/schemas";
 import { api } from "~/trpc/react";
-import toast from "react-hot-toast";
-import { useFormik } from "formik";
-import { createCarFormSchema } from "~/types";
-import { CarAvailability } from "@prisma/client";
 
 type Props = {
   children: React.ReactNode;
@@ -53,7 +50,7 @@ export default function CreateCarDialog(props: Props) {
     validationSchema: createCarFormSchema,
     onSubmit: (formData) => {
       mutate(formData, {
-        onSuccess: (res) => {
+        onSuccess: () => {
           toast.success("Your car has been created!!");
           formik.resetForm();
           utils.cars.getAll.invalidate();

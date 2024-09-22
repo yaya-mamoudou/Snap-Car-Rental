@@ -6,10 +6,16 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import { BellDot } from "lucide-react";
-import React from "react";
-import { ProfileType } from "~/types";
+import { logout } from "~/server-actions/auth";
+import { useGlobalStore } from "~/store/globalStore";
+import type { ProfileType } from "~/types";
 
 export default function UserNav({ user }: { user: Partial<ProfileType> }) {
+  const setUser = useGlobalStore((state) => state.setUser);
+  const handleLogout = async () => {
+    await logout();
+    setUser({});
+  };
   const avatarFallback = user?.fullname
     ? `${user.fullname?.split(" ")[0]?.[0]}${user.fullname?.split(" ")[1]?.[0]}`
     : "";
@@ -36,7 +42,12 @@ export default function UserNav({ user }: { user: Partial<ProfileType> }) {
 
         <DropdownMenu variant="faded" aria-label="Static Actions">
           <DropdownItem key="profile">Profile</DropdownItem>
-          <DropdownItem key="logout" className="text-danger" color="danger">
+          <DropdownItem
+            onClick={handleLogout}
+            key="logout"
+            className="text-danger"
+            color="danger"
+          >
             Logout
           </DropdownItem>
         </DropdownMenu>

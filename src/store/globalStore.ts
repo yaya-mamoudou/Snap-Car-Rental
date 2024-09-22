@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { ActiveBookingType, ProfileType } from '~/types';
+import type { ActiveBookingType, ProfileType } from '~/types';
 
 type State = {
     user: Partial<ProfileType>,
@@ -9,7 +9,7 @@ type State = {
 }
 
 type Actions = {
-    setUser: (user: ProfileType) => void
+    setUser: (user: Partial<ProfileType>) => void
     setActiveBooking: (bookingInfo: ActiveBookingType) => void
 }
 

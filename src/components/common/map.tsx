@@ -58,17 +58,17 @@ const Map = ({ pickup, dropOff }: Props) => {
     }
   }, [isLoaded, dropOff, pickup]);
 
-  const [map, setMap] = React.useState(null);
-  const onLoad = React.useCallback(
-    function callback(map: any) {
-      // This is just an example of getting and using the map instance!!! don't just blindly copy!
-      /* eslint-disable  @typescript-eslint/no-unsafe-argument */
-      const bounds = new window.google.maps.LatLngBounds(center);
-      map.fitBounds(bounds);
-      setMap(map);
-    },
-    [center],
-  );
+  const [_, setMap] = React.useState(null);
+  // const onLoad = React.useCallback(
+  //   function callback(map: any) {
+  //     // This is just an example of getting and using the map instance!!! don't just blindly copy!
+  //     /* eslint-disable  @typescript-eslint/no-unsafe-argument */
+  //     const bounds = new window.google.maps.LatLngBounds(center);
+  //     map.fitBounds(bounds);
+  //     setMap(map);
+  //   },
+  //   [center],
+  // );
 
   const onUnmount = React.useCallback(function callback() {
     setMap(null);

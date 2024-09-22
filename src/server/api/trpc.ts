@@ -13,7 +13,6 @@ import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { getCookie } from "~/server-actions";
 
 import { db } from "~/server/db";
 
@@ -29,14 +28,12 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const user = await cookies().get('user')
-
-  const token = JSON.parse(user?.value ?? '{}');
+export const createTRPCContext = (opts: { headers: Headers }) => {
+  const user = cookies().get('user')
 
   return {
     db,
-    session: { token, id: '', role: '' },
+    session: { token: user?.value ?? '', id: '', role: '' },
     ...opts,
   };
 };
@@ -102,9 +99,9 @@ export const publicProcedure = t.procedure;
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   try {
-    const user = verify(ctx.session?.token, process.env.JWT_SECRET || '') as { userId: string, role: Roles } | undefined
+    const user = verify(ctx.session?.token, process.env.JWT_SECRET ?? '') as { userId: string, role: Roles } | undefined
 
-    if (!ctx?.session || !ctx.session?.token || !user) {
+    if (!ctx?.session ?? !ctx.session?.token ?? !user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return next({
@@ -113,8 +110,8 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
         session: { ...ctx.session, id: user.userId, role: user.role },
       },
     });
-  } catch (error: any) {
-    throw new TRPCError({ code: "UNAUTHORIZED", message: error.message });
+  } catch (error) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: (error as { message: string }).message });
   }
 });
 

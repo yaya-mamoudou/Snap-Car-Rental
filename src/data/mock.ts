@@ -160,6 +160,13 @@ export const status = [
     { label: "Unavailable", value: "UNAVAILABLE" },
 ];
 
+export const Bookingstatus = [
+    { label: "PAID", value: "PAID" },
+    { label: "PAID_AND_ONGOING", value: "PAID_AND_ONGOING" },
+    { label: "PENDIND_PAYMENT", value: "PENDIND_PAYMENT" },
+    { label: "EXPIRED", value: "EXPIRED" },
+];
+
 export const engines = [
     { label: "Diesel", value: "diesel" },
     { label: "Available", value: "available" },
@@ -173,5 +180,8 @@ export const wheel = [
 export const paginationSchema = z.object({
     per_page: z.number(),
     page: z.number(),
-    sort: z.enum(['desc', 'asc'])
+    sort: z.enum(['desc', 'asc']),
+    filter: z.enum(['available'])
 })
+
+export const formatStr = "yyyy-MM-dd'T'HH:mm:ss";

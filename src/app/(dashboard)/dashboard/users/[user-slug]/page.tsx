@@ -3,14 +3,13 @@ import { cn, Divider } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
 import Button from "~/components/common/button";
 import { api } from "~/trpc/react";
 
 export default function Page() {
   const params: { "user-slug": string } = useParams();
   const userId = params["user-slug"];
-  const { data: user, isPending } = api.users.get.useQuery({ id: userId });
+  const { data: user } = api.users.get.useQuery({ id: userId });
 
   return (
     <div>
