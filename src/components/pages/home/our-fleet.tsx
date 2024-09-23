@@ -9,18 +9,19 @@ export default async function OurFleet() {
       <div className="container my-14 flex flex-col items-center">
         <h2 className="text-center text-2xl font-semibold">Our Fleet</h2>
         <div className="mt-10 grid w-full grid-cols-12 gap-x-0 gap-y-10 sm:gap-x-10 lg:w-3/4">
-          {cars?.data.map((item, key) => (
+          {cars?.data.map((car, key) => (
             <div key={key} className="col-span-12 sm:col-span-6 2xl:col-span-4">
               <CarCard
-                id={item.id}
-                daily_price={item.daily_price}
-                monthly_price={item.monthly_price!}
-                transmission={item.transmission}
-                name={item.name}
-                availability={item.availability}
-                luggages={item.luggages}
-                engine={item.engine}
-                seats={item.seats}
+                id={car.id}
+                daily_price={car.daily_price}
+                monthly_price={car.monthly_price!}
+                transmission={car.transmission}
+                name={car.name}
+                availability={car.availability}
+                luggages={car.luggages}
+                engine={car.engine}
+                seats={car.seats}
+                images={car.images}
               />
             </div>
           ))}

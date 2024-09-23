@@ -62,7 +62,7 @@ export default function CarsList() {
             key={car.id}
             className="flex cursor-pointer items-center gap-3 px-4 py-2 hover:bg-gray-100"
           >
-            <div className="size-[150px] h-fit rounded-full bg-slate-100">
+            <div className="h-fit w-[150px] rounded-full bg-slate-100">
               <Image
                 src={car.images[0] ?? "/images/cars/car3.jpg"}
                 alt="..."

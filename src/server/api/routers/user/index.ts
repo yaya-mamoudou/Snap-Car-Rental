@@ -80,7 +80,7 @@ export const userRouter = createTRPCRouter({
 
     get: protectedProcedure
         .use(errorHandlingMiddleware)
-        .use(roleMiddleware(["CLIENT"]))
+        .use(roleMiddleware(["CLIENT", 'ADMIN']))
         .input(z.object({ id: z.string() }))
         .query(({ ctx, input }) => {
             return ctx.db.user.findUnique({ where: { id: input.id } })

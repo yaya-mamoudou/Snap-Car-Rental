@@ -2,6 +2,7 @@
 import { parseDateTime } from "@internationalized/date";
 import { add, differenceInDays, format } from "date-fns";
 import { Carousel } from "flowbite-react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Button from "~/components/common/button";
@@ -107,7 +108,7 @@ export default function Page() {
                       },
                     }}
                   >
-                    {/* {car?.images.map((img, key) => (
+                    {car?.images.map((img, key) => (
                       <Image
                         key={key}
                         alt="..."
@@ -116,7 +117,7 @@ export default function Page() {
                         height={200}
                         className="size-full object-contain md:size-2/3"
                       />
-                    ))} */}
+                    ))}
                   </Carousel>
                 </div>
               </div>

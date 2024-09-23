@@ -18,7 +18,7 @@ export default function Page() {
         <Image
           width={200}
           height={200}
-          src={"https://randomuser.me/api/portraits/men/10.jpg"}
+          src={"/images/blank_profile.webp"}
           alt={`${""} profile image`}
           className="self-start rounded-sm"
         />

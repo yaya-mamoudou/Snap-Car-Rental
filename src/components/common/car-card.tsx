@@ -5,6 +5,7 @@ import { z } from "zod";
 import { currencyFormatter } from "~/helpers";
 import { createCarSchema } from "~/server/api/routers/car/schema";
 import Button from "./button";
+import Image from "next/image";
 
 type Props = Partial<z.infer<typeof createCarSchema>> & {
   horizontal?: boolean;
@@ -17,7 +18,7 @@ type Props = Partial<z.infer<typeof createCarSchema>> & {
   transmission: string;
   seats: string;
   luggages: string;
-  // images: string[];
+  images: string[];
 };
 const CarCard = (props: Props) => {
   return (
@@ -39,7 +40,7 @@ const CarCard = (props: Props) => {
           leftControl={<div></div>}
           indicators={!props.horizontal}
         >
-          {/* {props?.images
+          {props?.images
             ?.slice(0, props.horizontal ? 1 : undefined)
             ?.map((img, key) => (
               <Image
@@ -50,7 +51,7 @@ const CarCard = (props: Props) => {
                 height={200}
                 className="size-full object-cover"
               />
-            ))} */}
+            ))}
         </Carousel>
       </div>
       <div className="mt-5 pl-2">

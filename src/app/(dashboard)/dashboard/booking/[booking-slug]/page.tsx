@@ -4,6 +4,7 @@ import { Divider, Spinner } from "@nextui-org/react";
 import type { BookingStatus } from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -66,7 +67,7 @@ export default function BookingPage() {
         <Image
           width={200}
           height={200}
-          src={"/images/cars/car3.jpg"}
+          src={booking?.car.images[0] ?? "/images/cars/car3.jpg"}
           alt={`${""} profile image`}
           className="self-start rounded-sm"
         />
@@ -84,7 +85,12 @@ export default function BookingPage() {
 
           <div>
             <div className="text-gray-400">User</div>
-            <div>{booking?.user.fullname}</div>
+            <Link
+              className="text-primary underline"
+              href={`/dashboard/users/${booking?.user.id}`}
+            >
+              {booking?.user.fullname} - {booking?.user.phone_number}
+            </Link>
           </div>
 
           <div>

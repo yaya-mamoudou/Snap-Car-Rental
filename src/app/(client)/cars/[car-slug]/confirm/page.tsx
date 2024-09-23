@@ -72,6 +72,7 @@ export default function Page() {
                   luggages={car.luggages}
                   engine={car.engine}
                   seats={car.seats}
+                  images={car.images}
                 />
               )}
             </div>

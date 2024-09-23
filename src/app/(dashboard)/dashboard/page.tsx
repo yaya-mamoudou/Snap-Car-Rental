@@ -148,7 +148,7 @@ const addIconsToStats = (
 ) => {
   return stats.map((item) => {
     let icon;
-    if (item.type === "car") icon = Car;
+    if (item.type === "cars") icon = Car;
     if (item.type === "booking") icon = NotebookPen;
     if (item.type === "users") icon = UserRound;
     return { ...item, icon };
