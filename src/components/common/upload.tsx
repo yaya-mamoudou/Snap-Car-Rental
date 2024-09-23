@@ -29,7 +29,7 @@ export default function Upload(props: Props) {
       files?.length > 1 ? `${files.length} files` : files?.[0]?.name;
 
   useEffect(() => {
-    setFiles(props.files as File[]);
+    setFiles(props.files!);
   }, [props.files]);
 
   return (
@@ -60,10 +60,7 @@ export default function Upload(props: Props) {
       <input
         ref={ref}
         onChange={(e) => {
-          let data = Array.from(e.target.files as unknown as File[]);
-          // if (props.multiple) {
-          //   data.push(...files);
-          // }
+          const data = Array.from(e.target.files as unknown as File[]);
           setFiles(data);
           props.onChange?.(data);
         }}

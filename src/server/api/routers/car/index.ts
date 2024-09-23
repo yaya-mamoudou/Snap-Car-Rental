@@ -25,9 +25,9 @@ export const carRouter = createTRPCRouter({
         .use(errorHandlingMiddleware)
         .input(updateCarSchema)
         .mutation(async ({ ctx, input }) => {
-            let images: string[] = [];
+            const images: string[] = [];
             if (input.images) {
-                let newImages: string[] = []
+                const newImages: string[] = []
                 let newImageUrls;
                 input.images.forEach(img => {
                     if (img.startsWith('https')) images.push(img)
@@ -96,7 +96,7 @@ export const carRouter = createTRPCRouter({
             const returnData = { availability: car?.availability, available: car?.availability === 'AVAILABLE', till: '' }
             if (!returnData.available) {
                 const bookings = await ctx.db.booking.findMany({ where: { carId: input.id, status: { not: 'EXPIRED' } } })
-                returnData.till = bookings[0]?.end_date.toString() as string
+                returnData.till = bookings[0]!.end_date.toString()
             }
             return returnData
         })

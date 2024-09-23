@@ -4,6 +4,7 @@ import type { CarAvailability } from "@prisma/client";
 import { useFormik } from "formik";
 import { omit, uniqueId } from "lodash";
 import { DollarSign, Trash } from "lucide-react";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -77,7 +78,7 @@ export default function DashboardCarsPage() {
 
       formik.handleBlur(event);
       formik.handleChange(event);
-      let previewsTemp = await Promise.all(
+      const previewsTemp = await Promise.all(
         files.map((item) => convertFileToBase64(item)),
       );
       const previewsTempFormated = previewsTemp.map((img) => ({
@@ -103,7 +104,9 @@ export default function DashboardCarsPage() {
 
   useEffect(() => {
     if (car) {
-      formik.setValues(omit(car, ["id", "images"]) as typeof formik.values);
+      type Values = Extract<typeof formik.values, "images">;
+
+      formik.setValues(omit(car, ["id", "images"]) as Values);
       setPreviews(car.images.map((img) => ({ url: img, key: uuid() })));
     }
   }, [car]);
@@ -134,7 +137,7 @@ export default function DashboardCarsPage() {
                     onClick={() => handleFileDelete(index, img.url)}
                     className="relative flex size-[70px] items-center justify-center"
                   >
-                    <img
+                    <Image
                       alt="..."
                       src={img.url}
                       width={70}
