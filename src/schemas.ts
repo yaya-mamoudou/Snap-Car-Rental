@@ -1,11 +1,12 @@
 import * as yup from 'yup';
 
 const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/png'];
-const MAX_FILE_SIZE = 1024 * 1024 * 2; // 5MB
+const MEGABYTE = 1024 * 1024
+const MAX_FILE_SIZE = MEGABYTE * 5; // 5MB
 
 const fileSchema =
     yup.mixed<File>()
-        .test('fileSize', 'File size is too large', (file) => {
+        .test('fileSize', `Each file must be < ${MAX_FILE_SIZE / MEGABYTE} MB`, (file) => {
             return file && file.size <= MAX_FILE_SIZE;
         })
         .test('fileType', 'Unsupported file type', (file) => {
@@ -32,10 +33,10 @@ export const createCarFormSchema = yup.object({
     fuel: yup.string().required(),
     description: yup.string().optional(),
     transmission: yup.string().required(),
-
     drive_train: yup.string().required(),
     MPG: yup.string().optional(),
     features: yup.string().optional(),
+    images: yup.array(fileSchema)
 })
 
 export const signupFormSchema = yup.object({

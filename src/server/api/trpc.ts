@@ -28,12 +28,15 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: { headers: Headers }) => {
-  const user = cookies().get('user')
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  // const user = JSON.parse(cookies().get('user')?.value ?? '')
+
+  let token = cookies().get('user')?.value
+  if (token) token = JSON.parse(token)
 
   return {
     db,
-    session: { token: user?.value ?? '', id: '', role: '' },
+    session: { token: token as string, id: '', role: '' },
     ...opts,
   };
 };

@@ -18,12 +18,13 @@ export default function Page() {
   const { data: car } = api.cars.getById.useQuery({ id: carSlug as string });
   const router = useRouter();
   const { mutate, isPending } = api.booking.create.useMutation();
-  const { start_date, end_date, dropoff_location_id, pickup_location_id } =
-    useGlobalStore((state) => state.state.activeBookingDetails);
+  const bookingDetails = useGlobalStore(
+    (state) => state.state.activeBookingDetails,
+  );
 
   const props = getBookingPrices({
-    start_date,
-    end_date,
+    start_date: bookingDetails?.start_date,
+    end_date: bookingDetails?.end_date,
     monthly_price: car?.monthly_price ?? "",
     daily_price: car?.daily_price,
   });
@@ -31,12 +32,12 @@ export default function Page() {
   const handleSubmit = async () => {
     mutate(
       {
-        start_date: start_date!,
-        end_date: end_date!,
+        start_date: bookingDetails.start_date!,
+        end_date: bookingDetails.end_date!,
         amount: props.total_price,
         carId: carSlug as string,
-        dropoff_location_id: dropoff_location_id!,
-        pickup_location_id: pickup_location_id!,
+        dropoff_location_id: bookingDetails.dropoff_location_id!,
+        pickup_location_id: bookingDetails.pickup_location_id!,
       },
       {
         onSuccess(data) {

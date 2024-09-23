@@ -67,6 +67,7 @@ model Car {
     seats         String
     fuel          String
     luggages      String
+    images        String[]
     daily_price   String
     MPG           String?
     features      String?

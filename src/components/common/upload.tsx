@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@nextui-org/react";
 import { FileUp } from "lucide-react";
 
@@ -14,18 +14,23 @@ type Props = {
   multiple?: boolean;
   required?: boolean;
   errorMessage?: string;
+  files?: File[];
 };
 
 export default function Upload(props: Props) {
   const ref = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>(props?.files ?? []);
   let displayName;
 
-  if (files.length === 0)
+  if (files?.length === 0 || !files)
     displayName = props.placeholder ?? "Upload your files here";
   else
     displayName =
       files?.length > 1 ? `${files.length} files` : files?.[0]?.name;
+
+  useEffect(() => {
+    setFiles(props.files as File[]);
+  }, [props.files]);
 
   return (
     <div className={cn("relative w-full", props.className)}>
@@ -55,9 +60,12 @@ export default function Upload(props: Props) {
       <input
         ref={ref}
         onChange={(e) => {
-          const files = Array.from(e.target.files as unknown as File[]);
-          setFiles(files);
-          props.onChange?.(files);
+          let data = Array.from(e.target.files as unknown as File[]);
+          // if (props.multiple) {
+          //   data.push(...files);
+          // }
+          setFiles(data);
+          props.onChange?.(data);
         }}
         id="file-input"
         type="file"

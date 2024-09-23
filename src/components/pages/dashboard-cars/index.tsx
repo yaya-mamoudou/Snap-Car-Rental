@@ -64,7 +64,7 @@ export default function CarsList() {
           >
             <div className="size-[150px] h-fit rounded-full bg-slate-100">
               <Image
-                src="/images/cars/car3.jpg"
+                src={car.images[0] ?? "/images/cars/car3.jpg"}
                 alt="..."
                 width={150}
                 height={150}

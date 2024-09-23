@@ -2,17 +2,21 @@
 import { Textarea } from "@nextui-org/react";
 import type { CarAvailability } from "@prisma/client";
 import { useFormik } from "formik";
-import { omit } from "lodash";
-import { DollarSign } from "lucide-react";
+import { omit, uniqueId } from "lodash";
+import { DollarSign, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Select from "~/components/common/select";
+import Upload from "~/components/common/upload";
 import { status } from "~/data/mock";
 import { createCarFormSchema } from "~/schemas";
 import { api } from "~/trpc/react";
+import { convertFileToBase64 } from "~/utils/convert-file-to-base64";
+
+const uuid = uniqueId;
 
 export default function DashboardCarsPage() {
   const params: Record<"car-slug", string> = useParams();
@@ -21,6 +25,7 @@ export default function DashboardCarsPage() {
   const { data: categories } = api.cars.getCategories.useQuery();
   const utils = api.useUtils();
   const { mutate, isPending } = api.cars.update.useMutation();
+  const [previews, setPreviews] = useState<{ key: string; url: string }[]>([]);
 
   const formik = useFormik({
     initialValues: {
@@ -39,12 +44,13 @@ export default function DashboardCarsPage() {
       monthly_price: "",
       availability: "UNAVAILABLE" as CarAvailability,
       description: "",
+      images: [] as File[],
     },
     validationSchema: createCarFormSchema,
     enableReinitialize: true,
     onSubmit: (formData) => {
       mutate(
-        { carId: carSlug, ...formData },
+        { carId: carSlug, ...formData, images: previews.map((img) => img.url) },
         {
           onSuccess: () => {
             toast.success("Your car has been Edited!!");
@@ -60,9 +66,45 @@ export default function DashboardCarsPage() {
     },
   });
 
+  const handleFileChange = async (files: File[]) => {
+    if (files) {
+      const event = {
+        target: {
+          value: files,
+          name: "images",
+        },
+      };
+
+      formik.handleBlur(event);
+      formik.handleChange(event);
+      let previewsTemp = await Promise.all(
+        files.map((item) => convertFileToBase64(item)),
+      );
+      const previewsTempFormated = previewsTemp.map((img) => ({
+        url: img,
+        key: uuid(),
+      }));
+
+      previewsTempFormated.unshift(...previews);
+      setPreviews(previewsTempFormated as typeof previews);
+    }
+  };
+
+  const handleFileDelete = (index: number, url: string) => {
+    if (!url.startsWith("https")) {
+      const files = [...formik.values.images];
+      files.splice(index, 1);
+      formik.setFieldValue("images", files);
+    }
+    const previewsTemp = [...previews];
+    previewsTemp.splice(index, 1);
+    setPreviews(previewsTemp);
+  };
+
   useEffect(() => {
     if (car) {
-      formik.setValues(omit(car, ["id"]) as typeof formik.values);
+      formik.setValues(omit(car, ["id", "images"]) as typeof formik.values);
+      setPreviews(car.images.map((img) => ({ url: img, key: uuid() })));
     }
   }, [car]);
 
@@ -73,6 +115,39 @@ export default function DashboardCarsPage() {
           <h1 className="mb-4 mt-10 text-2xl font-bold text-black">Edit Car</h1>
 
           <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-12">
+              <Upload
+                multiple
+                onChange={handleFileChange}
+                label="Upload Images"
+                files={formik.values.images}
+                errorMessage={
+                  ((formik.touched.images && formik.errors.images) as string) ??
+                  ""
+                }
+              />
+
+              <div className="mt-2 flex flex-wrap gap-2">
+                {previews.map((img, index) => (
+                  <div
+                    key={img.key}
+                    onClick={() => handleFileDelete(index, img.url)}
+                    className="relative flex size-[70px] items-center justify-center"
+                  >
+                    <img
+                      alt="..."
+                      src={img.url}
+                      width={70}
+                      height={70}
+                      className="size-[70px] rounded-md bg-slate-200 object-cover"
+                    />
+                    <div className="absolute flex size-[25px] cursor-pointer items-center justify-center rounded-full bg-black/70">
+                      <Trash className="text-white" size={16} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="col-span-6">
               <Input
                 {...formik.getFieldProps("name")}

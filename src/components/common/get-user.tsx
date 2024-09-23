@@ -1,7 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { authRouter } from "~/helpers";
+import { authRouter, isMatching } from "~/helpers";
 import { useGlobalStore } from "~/store/globalStore";
 import { api } from "~/trpc/react";
 import { ProfileType } from "~/types";
@@ -21,9 +21,8 @@ export default function GetUser() {
 
   useEffect(() => {
     if (error) {
-      if (error.data?.code === "UNAUTHORIZED") {
-        if (!pathname.startsWith("/login") && !pathname.startsWith("/register"))
-          authRouter(router, "/login");
+      if (error.data?.code === "UNAUTHORIZED" && isMatching(pathname)) {
+        authRouter(router, "/login");
       }
     }
   }, [error]);

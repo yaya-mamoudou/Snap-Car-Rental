@@ -12,6 +12,10 @@ const config = {
         protocol: "https",
         hostname: "randomuser.me",
       },
+      {
+        protocol: "https",
+        hostname: "ieifdmvjeyjmjdakeqpc.supabase.co",
+      },
     ],
   },
 };

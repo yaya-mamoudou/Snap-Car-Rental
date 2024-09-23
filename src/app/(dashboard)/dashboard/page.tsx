@@ -22,8 +22,11 @@ export default function DashboardPage() {
   const stats = addIconsToStats(statsData ?? []);
   const { data: users } = api.users.getAllUsers.useQuery();
 
-  const { mutate: fetchCarAvailability, isPending: isFetchingAvailability } =
-    api.cars.getCarAvailability.useMutation();
+  const {
+    mutate: fetchCarAvailability,
+    data,
+    isPending: isFetchingAvailability,
+  } = api.cars.getCarAvailability.useMutation();
 
   return (
     <div>
@@ -49,20 +52,27 @@ export default function DashboardPage() {
 
       <div className="mt-10 grid grid-cols-12 gap-4">
         <Container className="col-span-12" title="Check Car Availability">
-          <Select
-            endContent={isFetchingAvailability && <Spinner size="lg" />}
-            placeholder="Select"
-            label="Select Car"
-            labelPlacement="inside"
-            className="mt-4 max-w-[400px]"
-            data={
-              cars?.data.map((item) => ({
-                label: item.name,
-                value: item.id,
-              })) ?? []
-            }
-            onChange={(e) => fetchCarAvailability({ id: e.target.value })}
-          />
+          <div className="flex w-full items-center gap-x-4">
+            <Select
+              endContent={isFetchingAvailability && <Spinner size="sm" />}
+              placeholder="Select"
+              label="Select Car"
+              labelPlacement="inside"
+              className="mt-4 max-w-[400px] flex-1"
+              data={
+                cars?.data.map((item) => ({
+                  label: item.name,
+                  value: item.id,
+                })) ?? []
+              }
+              onChange={(e) => fetchCarAvailability({ id: e.target.value })}
+            />
+            {data && (
+              <div className="capitalize">
+                {data?.availability?.toLowerCase()}
+              </div>
+            )}
+          </div>
         </Container>
         <Container
           seeAllLink="/dashboard/booking"
@@ -91,7 +101,10 @@ export default function DashboardPage() {
               <div className="h-fit rounded-full bg-slate-100">
                 <Avatar
                   // src={user?.profile}
-                  fallback={user.fullname}
+                  fallback={user.fullname
+                    ?.split(" ")
+                    .map((item) => item[0])
+                    .join("")}
                   size="sm"
                 />
               </div>

@@ -9,21 +9,43 @@ import {
     roleMiddleware
 } from "~/server/api/trpc";
 import { createCarSchema, updateCarSchema } from "./schema";
+import { uploadFiles } from "~/utils/uploadFile";
 
 export const carRouter = createTRPCRouter({
     create: protectedProcedure
-        .use(roleMiddleware(['CLIENT']))
+        .use(roleMiddleware(["ADMIN"]))
         .use(errorHandlingMiddleware)
         .input(createCarSchema)
         .mutation(async ({ ctx, input }) => {
-            return ctx.db.car.create({ data: input })
+            const images = await uploadFiles(input.images, 'car')
+            return ctx.db.car.create({ data: { ...input, images } })
         }),
     update: protectedProcedure
-        .use(roleMiddleware(["ADMIN", 'CLIENT']))
+        .use(roleMiddleware(["ADMIN"]))
         .use(errorHandlingMiddleware)
         .input(updateCarSchema)
         .mutation(async ({ ctx, input }) => {
-            const car = await ctx.db.car.update({ where: { id: input.carId }, data: omit(input, ['carId']) })
+            let images: string[] = [];
+            if (input.images) {
+                let newImages: string[] = []
+                let newImageUrls;
+                input.images.forEach(img => {
+                    if (img.startsWith('https')) images.push(img)
+                    else newImages.push(img)
+                })
+
+                if (newImages.length > 0) {
+                    newImageUrls = await uploadFiles(newImages, 'car')
+                    images.push(...newImageUrls)
+                }
+            }
+
+            const car = await ctx.db.car.update({
+                where: { id: input.carId }, data: {
+                    ...omit(input, ['carId']),
+                    ...images.length > 0 && { images }
+                }
+            })
             if (input.availability === 'AVAILABLE') {
                 await ctx.db.booking.updateMany({ where: { carId: input.carId }, data: { status: 'EXPIRED' } })
             }
@@ -71,7 +93,12 @@ export const carRouter = createTRPCRouter({
             id: z.string()
         })).mutation(async ({ ctx, input }) => {
             const car = await ctx.db.car.findUnique({ where: { id: input.id } })
-            return
+            const returnData = { availability: car?.availability, available: car?.availability === 'AVAILABLE', till: '' }
+            if (!returnData.available) {
+                const bookings = await ctx.db.booking.findMany({ where: { carId: input.id, status: { not: 'EXPIRED' } } })
+                returnData.till = bookings[0]?.end_date.toString() as string
+            }
+            return returnData
         })
 });
 

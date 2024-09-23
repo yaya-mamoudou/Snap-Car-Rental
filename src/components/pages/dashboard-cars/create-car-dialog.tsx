@@ -10,14 +10,17 @@ import {
 } from "@nextui-org/react";
 import { CarAvailability } from "@prisma/client";
 import { useFormik } from "formik";
-import React, { ReactElement } from "react";
+import { Trash } from "lucide-react";
+import React, { ReactElement, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/common/button";
 import Input from "~/components/common/input";
 import Select from "~/components/common/select";
+import Upload from "~/components/common/upload";
 import { status } from "~/data/mock";
 import { createCarFormSchema } from "~/schemas";
 import { api } from "~/trpc/react";
+import { convertFileToBase64 } from "~/utils/convert-file-to-base64";
 
 type Props = {
   children: React.ReactNode;
@@ -26,6 +29,7 @@ type Props = {
 export default function CreateCarDialog(props: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data: categories } = api.cars.getCategories.useQuery();
+  const [previews, setPreviews] = useState<string[]>([]);
   const utils = api.useUtils();
 
   const { mutate, isPending } = api.cars.create.useMutation();
@@ -46,22 +50,53 @@ export default function CreateCarDialog(props: Props) {
       monthly_price: "",
       availability: "UNAVAILABLE" as CarAvailability,
       description: "",
+      images: [] as File[],
     },
     validationSchema: createCarFormSchema,
     onSubmit: (formData) => {
-      mutate(formData, {
-        onSuccess: () => {
-          toast.success("Your car has been created!!");
-          formik.resetForm();
-          utils.cars.getAll.invalidate();
-          onOpenChange();
+      mutate(
+        { ...formData, images: previews },
+        {
+          onSuccess: () => {
+            toast.success("Your car has been created!!");
+            formik.resetForm();
+            utils.cars.getAll.invalidate();
+            onOpenChange();
+          },
+          onError: (error) => {
+            toast.error(error.message);
+          },
         },
-        onError: (error) => {
-          toast.error(error.message);
-        },
-      });
+      );
     },
   });
+
+  const handleFileChange = async (files: File[]) => {
+    if (files) {
+      const event = {
+        target: {
+          value: files,
+          name: "images",
+        },
+      };
+
+      formik.handleBlur(event);
+      formik.handleChange(event);
+      const previews = await Promise.all(
+        files.map((item) => convertFileToBase64(item)),
+      );
+      setPreviews(previews as string[]);
+    }
+  };
+
+  const handleFileDelete = (index: number) => {
+    const files = [...formik.values.images];
+    files.splice(index, 1);
+    formik.setFieldValue("images", files);
+    const previewsTemp = [...previews];
+    previewsTemp.splice(index, 1);
+    setPreviews(previewsTemp);
+  };
 
   return (
     <>
@@ -96,6 +131,39 @@ export default function CreateCarDialog(props: Props) {
                 Create Car
               </ModalHeader>
               <ModalBody>
+                <div>
+                  <Upload
+                    multiple
+                    onChange={handleFileChange}
+                    label="Upload Images"
+                    files={formik.values.images}
+                    errorMessage={
+                      ((formik.touched.images &&
+                        formik.errors.images) as string) ?? ""
+                    }
+                  />
+
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {previews.map((url, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleFileDelete(index)}
+                        className="relative flex size-[70px] items-center justify-center"
+                      >
+                        <img
+                          alt="..."
+                          src={url}
+                          width={70}
+                          height={70}
+                          className="size-[70px] rounded-md bg-red-400 object-cover"
+                        />
+                        <div className="absolute flex size-[25px] cursor-pointer items-center justify-center rounded-full bg-black/70">
+                          <Trash className="text-white" size={16} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-6">
                     <Input

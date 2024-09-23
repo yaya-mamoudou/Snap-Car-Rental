@@ -34,7 +34,10 @@ export default function UsersList() {
             <div className="h-fit rounded-full bg-slate-100">
               <Avatar
                 // src={user.profile}
-                fallback={user.fullname}
+                fallback={user.fullname
+                  ?.split(" ")
+                  .map((item) => item[0])
+                  .join("")}
                 size="sm"
               />
             </div>

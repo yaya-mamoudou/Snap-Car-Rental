@@ -15,7 +15,8 @@ export const createCarSchema = z.object({
     features: z.string().optional(),
     monthly_price: z.string().optional(),
     description: z.string().optional(),
-    availability: z.enum(['AVAILABLE', 'BOOKED', 'UNAVAILABLE'])
+    availability: z.enum(['AVAILABLE', 'BOOKED', 'UNAVAILABLE']),
+    images: z.array(z.string())
 })
 
 export const updateCarSchema = z.object({

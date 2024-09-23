@@ -2,6 +2,7 @@ import { differenceInDays } from 'date-fns';
 import jwt from 'jsonwebtoken';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
+
 // Helper function to generate a token (valid for 1 year)
 export const generateToken = (userId: string, role: string) => {
     return jwt.sign({ userId, role }, process.env.JWT_SECRET ?? 'yourSecretKey', {
@@ -44,3 +45,12 @@ export const getBookingPrices = (props: { start_date?: string, end_date?: string
         total_price: cost + tax
     }
 }
+
+const authRequiredPatterns = ['/dashboard', '/dashboard/:path*', '/cars/:path*/confirm'];
+
+export const isMatching = (pathname: string, patterns: string[] = authRequiredPatterns) => {
+    return patterns.some(pattern => {
+        const regex = new RegExp('^' + pattern.replace(/:\w+\*/g, '.*').replace(/\*/g, '.*') + '$');
+        return regex.test(pathname);
+    });
+};
