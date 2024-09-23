@@ -41,7 +41,13 @@ export default function UserNav({ user }: { user: Partial<ProfileType> }) {
         </DropdownTrigger>
 
         <DropdownMenu variant="faded" aria-label="Static Actions">
-          <DropdownItem key="profile">Profile</DropdownItem>
+          {user.role === "ADMIN" ? (
+            <DropdownItem key="profile" href="/dashboard">
+              Dashboard
+            </DropdownItem>
+          ) : (
+            <span></span>
+          )}
           <DropdownItem
             onClick={handleLogout}
             key="logout"

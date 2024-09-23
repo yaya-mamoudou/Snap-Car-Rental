@@ -1,3 +1,4 @@
+import { BookingStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const createBookingSchema = z.object({
@@ -8,4 +9,12 @@ export const createBookingSchema = z.object({
     carId: z.string(),
     dropoff_location_id: z.string(),
     pickup_location_id: z.string(),
+})
+
+export const updateBookingSchema = z.object({
+    id: z.string(),
+    start_date: z.string(),
+    end_date: z.string(),
+    car_id: z.string(),
+    status: z.nativeEnum(BookingStatus)
 })

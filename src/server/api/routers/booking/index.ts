@@ -1,9 +1,10 @@
 import { BookingStatus, CarAvailability } from "@prisma/client"
 import { createTRPCRouter, errorHandlingMiddleware, protectedProcedure, roleMiddleware } from "../../trpc"
-import { createBookingSchema } from "./schema"
+import { createBookingSchema, updateBookingSchema } from "./schema"
 import { v4 as uuid } from 'uuid'
 import { paginationSchema } from "~/data/mock"
 import { z } from "zod"
+import { AgendaNames } from "../../agenda"
 export const bookingRouter = createTRPCRouter({
     create: protectedProcedure
         .use(roleMiddleware(['CLIENT', 'ADMIN']))
@@ -20,9 +21,10 @@ export const bookingRouter = createTRPCRouter({
                     end_date: new Date(input.end_date)
                 }
             })
-            const res2 = ctx.db.car.update({ where: { id: input.carId }, data: { availability: CarAvailability.BOOKED } })
 
+            const res2 = ctx.db.car.update({ where: { id: input.carId }, data: { availability: CarAvailability.BOOKED } })
             const res = await Promise.all([res1, res2])
+            await ctx.agenda.schedule(new Date(input.end_date), AgendaNames.EXPIRE_BOOKING, { bookingId: res[0].id, carId: res[0].carId })
 
             return { ref: res[0].ref }
         }),
@@ -30,12 +32,9 @@ export const bookingRouter = createTRPCRouter({
         .input(paginationSchema.partial())
         .query(async ({ ctx, input }) => {
             const { sort = 'asc', per_page = 8, page = 1 } = input
-
             const list = ctx.db.booking.findMany({ include: { user: true, car: true }, skip: per_page * (page - 1), take: per_page, orderBy: { createdAt: sort } })
             const count = ctx.db.booking.count()
-
             const res = await Promise.all([list, count])
-
             const totalPages = Math.ceil(res[1] / per_page)
 
             return {
@@ -48,15 +47,15 @@ export const bookingRouter = createTRPCRouter({
             return ctx.db.booking.findUnique({ where: { id: input.id }, include: { car: true, user: true } })
         }),
     update: protectedProcedure.use(errorHandlingMiddleware)
-        .input(z.object({ start_date: z.string(), end_date: z.string(), car_id: z.string(), id: z.string(), status: z.nativeEnum(BookingStatus) }))
+        .input(updateBookingSchema.partial())
         .mutation(async ({ ctx, input }) => {
             const res = await ctx.db.booking.update(
                 {
                     where: { id: input.id },
                     data: {
                         status: input.status,
-                        start_date: new Date(input.start_date),
-                        end_date: new Date(input.end_date)
+                        ...input.start_date && { start_date: new Date(input.start_date) },
+                        ...input.end_date && { end_date: new Date(input.end_date) }
                     }
                 })
 

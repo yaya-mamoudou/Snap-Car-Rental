@@ -15,6 +15,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
+import { agenda } from "./agenda";
 
 /**
  * 1. CONTEXT
@@ -36,6 +37,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     db,
     session: { token, id: '', role: '' },
     ...opts,
+    agenda
   };
 };
 

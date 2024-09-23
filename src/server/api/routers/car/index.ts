@@ -94,10 +94,6 @@ export const carRouter = createTRPCRouter({
         })).mutation(async ({ ctx, input }) => {
             const car = await ctx.db.car.findUnique({ where: { id: input.id } })
             const returnData = { availability: car?.availability, available: car?.availability === 'AVAILABLE', till: '' }
-            if (!returnData.available) {
-                const bookings = await ctx.db.booking.findMany({ where: { carId: input.id, status: { not: 'EXPIRED' } } })
-                returnData.till = bookings[0]!.end_date.toString()
-            }
             return returnData
         })
 });
