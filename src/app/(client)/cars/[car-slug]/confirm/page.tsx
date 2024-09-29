@@ -25,7 +25,7 @@ export default function Page() {
   const props = getBookingPrices({
     start_date: bookingDetails?.start_date,
     end_date: bookingDetails?.end_date,
-    monthly_price: car?.monthly_price ?? "",
+    weekly_price: car?.weekly_price ?? "",
     daily_price: car?.daily_price,
   });
 
@@ -65,7 +65,7 @@ export default function Page() {
                   horizontal
                   id={car.id}
                   daily_price={car.daily_price}
-                  monthly_price={car.monthly_price ?? ""}
+                  weekly_price={car.weekly_price ?? ""}
                   transmission={car.transmission}
                   name={car.name}
                   availability={car.availability}

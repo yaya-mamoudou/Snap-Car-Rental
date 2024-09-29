@@ -22,7 +22,7 @@ export const currencyFormatter = new Intl.NumberFormat('en-US', {
     maximumSignificantDigits: 4
 });
 
-export const getBookingPrices = (props: { start_date?: string, end_date?: string, daily_price?: string, monthly_price?: string }) => {
+export const getBookingPrices = (props: { start_date?: string, end_date?: string, daily_price?: string, weekly_price?: string }) => {
     const numberOfDays = differenceInDays(
         new Date(props.end_date ?? ''),
         new Date(props.start_date ?? ''),
@@ -31,8 +31,8 @@ export const getBookingPrices = (props: { start_date?: string, end_date?: string
     const totalDaysPrice = Number(props?.daily_price) * numberOfDays;
     let cost = totalDaysPrice;
 
-    if (numberOfDays % 30 === 0 && props?.monthly_price) {
-        const montlyPrices = Number(props?.monthly_price) * (numberOfDays / 30);
+    if (numberOfDays % 30 === 0 && props?.weekly_price) {
+        const montlyPrices = Number(props?.weekly_price) * (numberOfDays / 30);
         cost = montlyPrices;
     }
 

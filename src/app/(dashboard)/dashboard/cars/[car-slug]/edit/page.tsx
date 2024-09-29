@@ -42,7 +42,7 @@ export default function DashboardCarsPage() {
       luggages: "",
       MPG: "",
       features: "",
-      monthly_price: "",
+      weekly_price: "",
       availability: "UNAVAILABLE" as CarAvailability,
       description: "",
       images: [] as File[],
@@ -228,15 +228,15 @@ export default function DashboardCarsPage() {
                 }
               />
               <Input
-                label="Montly Price"
+                label="Weekly Price"
                 variant="bordered"
                 endContent={<DollarSign size={20} />}
-                {...formik.getFieldProps("monthly_price")}
+                {...formik.getFieldProps("weekly_price")}
                 errorMessage={
-                  formik.touched.monthly_price && formik.errors.monthly_price
+                  formik.touched.weekly_price && formik.errors.weekly_price
                 }
                 isInvalid={
-                  formik.touched.monthly_price && !!formik.errors.monthly_price
+                  formik.touched.weekly_price && !!formik.errors.weekly_price
                 }
               />
             </div>

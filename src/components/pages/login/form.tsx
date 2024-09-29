@@ -29,8 +29,8 @@ function Form() {
     onSubmit: async (e) => {
       mutate(e, {
         onSuccess: async (data) => {
-          setUser(data.user as ProfileType);
           await saveUserInfo(JSON.stringify(data.token));
+          setUser(data.user as ProfileType);
 
           utils.users.me.invalidate();
           router.replace(redirect ?? "/dashboard");

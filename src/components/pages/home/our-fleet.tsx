@@ -2,7 +2,7 @@ import CarCard from "~/components/common/car-card";
 import { api } from "~/trpc/server";
 
 export default async function OurFleet() {
-  const cars = await api.cars.getAll({ per_page: 3 });
+  const cars = await api.cars.getAll({ per_page: 20 });
 
   return (
     <div className="bg-[#DBDBDB] py-10">
@@ -14,7 +14,7 @@ export default async function OurFleet() {
               <CarCard
                 id={car.id}
                 daily_price={car.daily_price}
-                monthly_price={car.monthly_price!}
+                weekly_price={car.weekly_price!}
                 transmission={car.transmission}
                 name={car.name}
                 availability={car.availability}

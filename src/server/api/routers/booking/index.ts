@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 import { paginationSchema } from "~/data/mock"
 import { z } from "zod"
 import { AgendaNames } from "../../agenda"
+import NewBookingTemplate from "~/components/email-templates/new-booking"
 export const bookingRouter = createTRPCRouter({
     create: protectedProcedure
         .use(roleMiddleware(['CLIENT', 'ADMIN']))
@@ -25,7 +26,17 @@ export const bookingRouter = createTRPCRouter({
             const res2 = ctx.db.car.update({ where: { id: input.carId }, data: { availability: CarAvailability.BOOKED } })
             const res = await Promise.all([res1, res2])
             await ctx.agenda.schedule(new Date(input.end_date), AgendaNames.EXPIRE_BOOKING, { bookingId: res[0].id, carId: res[0].carId })
+            try {
+                const { data, error } = await ctx.resend.emails.send({
+                    from: 'Snap Car Rentals <onboarding@resend.dev>',
+                    to: ['yayamamoudou0@gmail.com'],
+                    subject: 'A user just booked a car',
+                    react: NewBookingTemplate({ carName: res[1].name, carImg: res[1].images[0]! }),
+                })
+            } catch (error) {
+                console.log(error);
 
+            }
             return { ref: res[0].ref }
         }),
     getAll: protectedProcedure.use(roleMiddleware(['ADMIN', 'CLIENT'])).use(errorHandlingMiddleware)

@@ -13,7 +13,7 @@ type Props = Partial<z.infer<typeof createCarSchema>> & {
   name: string;
   availability: string;
   daily_price: string;
-  monthly_price: string;
+  weekly_price: string;
   engine: string;
   transmission: string;
   seats: string;
@@ -66,10 +66,10 @@ const CarCard = (props: Props) => {
               <span className="text-[0.6rem]">Day</span>
             </span>
             <span className="mx-2">|</span>
-            {props.monthly_price && (
+            {props.weekly_price && (
               <span>
-                {currencyFormatter.format(Number(props?.monthly_price))}/
-                <span className="text-[0.6rem]">Month</span>
+                {currencyFormatter.format(Number(props?.weekly_price))}/
+                <span className="text-[0.6rem]">Week</span>
               </span>
             )}
           </div>

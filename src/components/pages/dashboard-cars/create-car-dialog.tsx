@@ -47,7 +47,7 @@ export default function CreateCarDialog(props: Props) {
       luggages: "",
       MPG: "",
       features: "",
-      monthly_price: "",
+      weekly_price: "",
       availability: "UNAVAILABLE" as CarAvailability,
       description: "",
       images: [] as File[],
@@ -249,14 +249,14 @@ export default function CreateCarDialog(props: Props) {
                     <Input
                       label="Montly Price"
                       variant="bordered"
-                      {...formik.getFieldProps("monthly_price")}
+                      {...formik.getFieldProps("weekly_price")}
                       errorMessage={
-                        formik.touched.monthly_price &&
-                        formik.errors.monthly_price
+                        formik.touched.weekly_price &&
+                        formik.errors.weekly_price
                       }
                       isInvalid={
-                        formik.touched.monthly_price &&
-                        !!formik.errors.monthly_price
+                        formik.touched.weekly_price &&
+                        !!formik.errors.weekly_price
                       }
                     />
                   </div>

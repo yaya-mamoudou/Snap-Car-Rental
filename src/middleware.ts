@@ -6,7 +6,6 @@ export function middleware(request: NextRequest) {
     const user = request.cookies.get('user')
     if (!user?.value) return NextResponse.redirect(new URL(`/login?redirect=${request.nextUrl.pathname}`, request.url))
     return NextResponse.next()
-
 }
 
 // See "Matching Paths" below to learn more

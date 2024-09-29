@@ -12,6 +12,8 @@ export default function BookingPage() {
     per_page: 2,
   });
 
+  console.log(data);
+
   useEffect(() => {
     error?.message && toast.error(error.message);
   }, [error?.message]);

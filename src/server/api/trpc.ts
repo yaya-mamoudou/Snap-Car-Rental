@@ -13,6 +13,7 @@ import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { Resend } from 'resend';
 
 import { db } from "~/server/db";
 import { agenda } from "./agenda";
@@ -32,12 +33,14 @@ import { agenda } from "./agenda";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   let token: string = cookies().get('user')?.value ?? ''
   if (token) token = JSON.parse(token) as string
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   return {
     db,
     session: { token, id: '', role: '' },
     ...opts,
-    agenda
+    agenda,
+    resend
   };
 };
 
@@ -107,10 +110,11 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     if (!ctx?.session ?? !ctx.session?.token ?? !user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
+
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session, id: user.userId, role: user.role },
+        session: { ...ctx.session, id: user.userId, role: user?.role },
       },
     });
   } catch (error) {
@@ -141,7 +145,9 @@ export const errorHandlingMiddleware = t.middleware(async ({ next }) => {
 });
 
 export const roleMiddleware = (roles: Roles[]) => t.middleware(async ({ next, ctx }) => {
-  if (roles.includes(ctx.session.role as Roles)) return await next();
+  const userRecord = await ctx.db.user.findUnique({ where: { id: ctx.session.id } })
+  if (roles.includes(userRecord?.role as Roles)) return await next();
+
   else throw new TRPCError({
     code: "FORBIDDEN",
     message: 'You do not have access to this ressource. Ask your administrator to grant you access'

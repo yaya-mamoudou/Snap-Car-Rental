@@ -26,7 +26,7 @@ export const createCarFormSchema = yup.object({
     categoryId: yup.string().required(),
     engine: yup.string().required(),
     daily_price: yup.number().required(),
-    monthly_price: yup.number().optional(),
+    weekly_price: yup.number().optional(),
     seats: yup.number().required(),
     luggages: yup.number().required(),
     style: yup.string().required(),

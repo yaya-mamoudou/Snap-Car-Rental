@@ -55,27 +55,27 @@ model User {
 }
 
 model Car {
-    id            String          @id @default(auto()) @map("_id") @db.ObjectId
-    name          String
-    categoryId    String          @db.ObjectId
-    category      CarCategory     @relation(references: [id], fields: [categoryId])
-    style         String
-    availability  CarAvailability @default(UNAVAILABLE)
-    engine        String
-    transmission  String
-    drive_train   String
-    seats         String
-    fuel          String
-    luggages      String
-    images        String[]
-    daily_price   String
-    MPG           String?
-    features      String?
-    monthly_price String?
-    description   String?
-    bookings      Booking[]
-    createdAt     DateTime        @default(now())
-    updatedAt     DateTime        @updatedAt
+    id           String          @id @default(auto()) @map("_id") @db.ObjectId
+    name         String
+    categoryId   String          @db.ObjectId
+    category     CarCategory     @relation(references: [id], fields: [categoryId])
+    style        String
+    availability CarAvailability @default(UNAVAILABLE)
+    engine       String
+    transmission String
+    drive_train  String
+    seats        String
+    fuel         String
+    luggages     String
+    images       String[]
+    daily_price  String
+    MPG          String?
+    features     String?
+    weekly_price String?
+    description  String?
+    bookings     Booking[]
+    createdAt    DateTime        @default(now())
+    updatedAt    DateTime        @updatedAt
 }
 
 model Locations {

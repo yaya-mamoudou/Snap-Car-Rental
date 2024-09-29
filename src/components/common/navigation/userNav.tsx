@@ -15,6 +15,7 @@ export default function UserNav({ user }: { user: Partial<ProfileType> }) {
   const handleLogout = async () => {
     await logout();
     setUser({});
+    location.reload();
   };
   const avatarFallback = user?.fullname
     ? `${user.fullname?.split(" ")[0]?.[0]}${user.fullname?.split(" ")[1]?.[0]}`

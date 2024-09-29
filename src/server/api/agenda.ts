@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { Agenda } from "@hokify/agenda";
 import { db } from '../db';
-import { api } from '~/trpc/server';
 
 export enum AgendaNames {
     EXPIRE_BOOKING = "EXPIRE_BOOKING"

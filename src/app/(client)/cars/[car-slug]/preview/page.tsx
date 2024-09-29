@@ -56,9 +56,9 @@ export default function Page() {
   const totalDaysPrice = Number(car?.daily_price) * numberOfDays;
   let cost = totalDaysPrice;
 
-  if (numberOfDays % 30 === 0 && car?.monthly_price) {
-    const montlyPrices = Number(car?.monthly_price) * (numberOfDays / 30);
-    cost = montlyPrices;
+  if (numberOfDays % 7 === 0 && car?.weekly_price) {
+    const weeklyPrices = Number(car?.weekly_price) * (numberOfDays / 30);
+    cost = weeklyPrices;
   }
 
   const tax = cost * 0.06;
@@ -213,8 +213,8 @@ export default function Page() {
                     value={`$${car?.daily_price}`}
                   ></Item>
                   <Item
-                    label="Monthly price"
-                    value={`$${car?.monthly_price}`}
+                    label="Weekly price"
+                    value={`$${car?.weekly_price}`}
                   ></Item>
                   <Item label="Seats" value={car?.seats}></Item>
                   <Item label="Fuel" value={car?.fuel}></Item>

@@ -30,7 +30,7 @@ export default function CarList() {
               <CarCard
                 id={car.id}
                 daily_price={car.daily_price}
-                monthly_price={car.monthly_price!}
+                weekly_price={car.weekly_price!}
                 transmission={car.transmission}
                 name={car.name}
                 availability={car.availability}

@@ -13,7 +13,7 @@ export const createCarSchema = z.object({
     luggages: z.string(),
     MPG: z.string().optional(),
     features: z.string().optional(),
-    monthly_price: z.string().optional(),
+    weekly_price: z.string().optional(),
     description: z.string().optional(),
     availability: z.enum(['AVAILABLE', 'BOOKED', 'UNAVAILABLE']),
     images: z.array(z.string())
